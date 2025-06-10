@@ -15,7 +15,7 @@ export default function Home() {
           className="rounded-lg shadow-lg"
         />
       </div>
-      <h1 className="text-4xl font-bold text-blue-800 mb-6">
+      <h1 className="text-4xl font-bold text-[var(--accent-green)] mb-6">
         Welcome to Hope's Sober Living
       </h1>
       <p className="text-lg text-slate-700 mb-4 max-w-2xl">

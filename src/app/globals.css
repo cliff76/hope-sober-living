@@ -8,6 +8,11 @@
   /* Accent colors from logo */
   --accent-yellow: #f59e0b; /* amber-500 */
   --accent-green: #166534; /* green-700 */
+
+  /* New theme colors */
+  --soft-green: #A8D5BA;
+  --sky-blue: #A7C7E7;
+  --sunrise-gold: #F9E79F;
 }
 
 @theme inline {

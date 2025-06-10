@@ -4,7 +4,7 @@
 export default function AboutPage() {
   return (
     <div className="container mx-auto p-8">
-      <h1 className="text-4xl font-bold text-blue-800 mb-8 text-center">
+      <h1 className="text-4xl font-bold text-[var(--accent-green)] mb-8 text-center">
         About Hope's Sober Living
       </h1>
       
