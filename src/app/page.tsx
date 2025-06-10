@@ -6,7 +6,7 @@ export default function Home() {
     // The overall page structure (header, footer, min-h-screen) is handled by layout.tsx
     <div className="container mx-auto p-8 flex flex-col items-center text-center">
       <div className="my-10">
-        <Image
+            <Image
           src="/HopeLogo.png" // Ensure HopeLogo.png is in the public folder
           alt="Hope's Sober Living Logo"
           width={250}
