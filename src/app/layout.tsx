@@ -32,7 +32,7 @@ export default function RootLayout({
           <header className="bg-[var(--sky-blue)] text-slate-800 p-4 shadow-md sticky top-0 z-50">
             <nav className="container mx-auto flex justify-between items-center">
               <Link href="/" className="text-2xl font-bold hover:text-[var(--sunrise-gold)] transition-colors">
-                Hope's Sober Living
+                Hope&#39;s Sober Living
               </Link>
               <div className="flex items-center">
                 <Link href="/" className="px-3 py-2 hover:text-[var(--sunrise-gold)] transition-colors flex items-center">

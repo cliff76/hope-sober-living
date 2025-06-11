@@ -19,7 +19,7 @@ export default function Home() {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % interiorImages.length);
     }, 5000); // Change image every 5 seconds
 
-    return () => clearInterval(timer); // Cleanup the interval on component unmount
+    return () => clearInterval(timer); // Clean up the interval on a component unmount
   }, []);
 
   return (
@@ -58,7 +58,7 @@ export default function Home() {
             />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--accent-green)] mb-6">
-            Welcome to Hope's Sober Living
+            Welcome to Hope&#39;s Sober Living
           </h1>
           <p className="text-md sm:text-lg text-slate-700 dark:text-stone-300 mb-4 max-w-2xl">
             A supportive and safe environment dedicated to helping individuals on their journey to recovery.
