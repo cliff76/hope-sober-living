@@ -1,46 +1,13 @@
 "use client"; // Required for useState and useEffect
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
-
-const interiorImages = [
-  '/interior1.jpg',
-  '/interior2.jpg',
-  '/interior3.jpg',
-  '/interior4.jpg',
-  '/interior5.jpg',
-];
+import {Slideshow} from "@/components/slideshow";
 
 export default function Home() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % interiorImages.length);
-    }, 5000); // Change image every 5 seconds
-
-    return () => clearInterval(timer); // Clean up the interval on a component unmount
-  }, []);
-
   return (
     <>
       {/* Background Image Slideshow */}
-      <div className="fixed inset-0 -z-10">
-        {interiorImages.map((src, index) => (
-          <Image
-            key={src}
-            src={src}
-            alt="Hope's Sober Living Interior"
-            fill
-            sizes="100vw"
-            style={{ objectFit: 'cover' }} // Equivalent to object-cover
-            className={`transition-opacity duration-1000 ease-in-out ${
-              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-            }`}
-            priority={index === 0} // Prioritize loading the first image
-          />
-        ))}
-      </div>
+      <Slideshow />
 
       {/* Main Page Content */}
       {/* Added 'relative' and 'z-0' to ensure it's above the -z-10 background */}
@@ -49,12 +16,12 @@ export default function Home() {
         <div className="bg-white/75 dark:bg-slate-800/75 p-6 sm:p-10 rounded-xl shadow-xl">
           <div className="my-6 sm:my-10">
             <Image
-              src="/HopeLogo.png" // Ensure HopeLogo.png is in the public folder
-              alt="Hope's Sober Living Logo"
-              width={200} // Adjusted size
-              height={200} // Adjusted size
-              priority
-              className="rounded-lg shadow-lg mx-auto"
+                src="/HopeLogo.png" // Ensure HopeLogo.png is in the public folder
+                alt="Hope's Sober Living Logo"
+                width={200} // Adjusted size
+                height={200} // Adjusted size
+                priority
+                className="rounded-lg shadow-lg mx-auto"
             />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--accent-green)] mb-6">
