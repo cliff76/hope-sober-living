@@ -53,6 +53,12 @@ export default function RootLayout({
                   </svg>
                   About Us
                 </Link>
+                <Link href="/member" className="px-3 py-2 hover:text-[var(--sunrise-gold)] transition-colors flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 mr-1">
+                    <path fillRule="evenodd" d="M10 2c-1.717 0-3.402.396-4.931 1.152C3.54 3.91 2.37 5.496 1.654 7.309A12.924 12.924 0 001 10c0 2.21.59 4.304 1.654 6.091.716 1.813 1.886 3.399 3.423 4.159 1.529.756 3.214 1.152 4.93 1.152 1.717 0 3.402-.396 4.931-1.152 1.537-.76 2.707-2.346 3.423-4.159A12.924 12.924 0 0019 10c0-2.21-.59-4.304-1.654-6.091-.716-1.813-1.886-3.399-3.423-4.159A11.45 11.45 0 0010 2zM6.5 12a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm3-1.5a.5.5 0 01.5-.5h4a.5.5 0 010 1h-4a.5.5 0 01-.5-.5zm-1.5 3.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm3-1.5a.5.5 0 01.5-.5h4a.5.5 0 010 1h-4a.5.5 0 01-.5-.5z" clipRule="evenodd" />
+                  </svg>
+                  Login
+                </Link>
               </div>
             </nav>
           </header>
