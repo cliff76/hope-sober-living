@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import {ClerkProvider, SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,7 +19,21 @@ export const metadata: Metadata = {
   description: "A supportive and safe environment for recovery.",
 };
 
-export default function RootLayout({
+export default function AuthenticatedRootLayout({
+                                     children,
+                                   }: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+      <ClerkProvider>
+        <RootLayout>
+          {children}
+        </RootLayout>
+      </ClerkProvider>
+  );
+  }
+
+function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -53,6 +68,20 @@ export default function RootLayout({
                   </svg>
                   About Us
                 </Link>
+                <SignedOut>
+                  <Link href="/src/app/(clerk)/sign-in"
+                        className="px-3 py-2 hover:text-[var(--sunrise-gold)] transition-colors flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                         className="w-5 h-5 mr-1">
+                      <path
+                          d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                    Sign In
+                  </Link>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton showName />
+                </SignedIn>
               </div>
             </nav>
           </header>
