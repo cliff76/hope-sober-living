@@ -24,7 +24,7 @@ export default function Home() {
                 className="rounded-lg shadow-lg mx-auto"
             />
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--accent-green)] mb-6">
+          <h1 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] mb-6">
             There is always Hope...
           </h1>
           <p className="text-md sm:text-lg text-slate-700 dark:text-stone-300 mb-4 max-w-2xl">
