@@ -1,0 +1,24 @@
+name: Vercel Preview Deployment
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+on:
+  push:
+    branches-ignore:
+      - main
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      - name: Inject dynamic env var(s)
+        run: |
+          echo "NEXT_PUBLIC_API_URL=https://api.${GITHUB_REF_NAME}.example.com" >> $GITHUB_ENV
+      - name: Pull Vercel env for preview
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build with dynamic env
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }} --build-env NEXT_PUBLIC_API_URL=${{ env.NEXT_PUBLIC_API_URL }}
+      - name: Deploy preview
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
