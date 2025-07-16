@@ -20,5 +20,13 @@ jobs:
       - name: Updates custom env vars
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-        run: vercel env add PROJECT_NAME production < <(echo "HOPE_SOBER_LIVING") --token $VERCEL_TOKEN
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          vercel env add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY preview < <(echo "${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}") --token $VERCEL_TOKEN
+          vercel env add CLERK_SECRET_KEY preview < <(echo "${{ secrets.CLERK_SECRET_KEY }}") --token $VERCEL_TOKEN
+          vercel env add NEXT_PUBLIC_CLERK_SIGN_IN_URL preview < <(echo "${{ vars.NEXT_PUBLIC_CLERK_SIGN_IN_URL }}") --token $VERCEL_TOKEN
+          vercel env add NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL preview < <(echo "${{ vars.NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL }}") --token $VERCEL_TOKEN
+          vercel env add NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL preview < <(echo "${{ vars.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL }}") --token $VERCEL_TOKEN
+          vercel env add PROJECT_NAME preview < <(echo "HOPE_SOBER_LIVING") --token $VERCEL_TOKEN
         continue-on-error: true
