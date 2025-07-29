@@ -28,11 +28,14 @@ export async function createUser(user: RegisteredUser): Promise<CreateUserRespon
     try {
         console.error('Fetching Clerk client...');
         const client = await clerkClient();
+        console.error('Marking onboarding complete...');
         await client?.users?.updateUser(userId, {
             publicMetadata: {
                 onboardingComplete: true,
             },
         })
+        const updatedUser = await client?.users?.getUser(userId);
+        console.error('Onboarding marked complete.', updatedUser.publicMetadata);
         return {...response, onboardingComplete: true};
     } catch (e: any) {
         console.error('Error fetching Clerk client ', e.message);
