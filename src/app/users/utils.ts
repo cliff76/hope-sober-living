@@ -8,7 +8,8 @@ const usersDB = new Map<string, RegisteredUser>().set('clifton@email.com', {
             emailAddress: 'clifton@email.com',
             verified: true
         }
-    ]
+    ],
+    phone: '123-456-7890',
 });
 export type RegisteredUser = {
     primaryEmailAddress: string;
@@ -19,8 +20,10 @@ export type RegisteredUser = {
         emailAddress: string;
         verified: boolean;
     }[];
+    phone: string;
     sobrietyDate?: string;
     sponsor?: string;
+    currentStep?: string;
 };
 
 export type RegisterUserResponse = {
@@ -35,6 +38,7 @@ export function isUserRegistered(user: RegisteredUser | null | undefined) {
 export async function registerUser(user: RegisteredUser): Promise<RegisterUserResponse> {
     return Promise.resolve().then(() => {
         usersDB.set(user.primaryEmailAddress, user);
+        console.log('Registered users', usersDB);
         return { ok: true };
     }).catch((err) => {
         return { ok: false, errors: [err.message] };

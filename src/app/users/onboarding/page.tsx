@@ -13,12 +13,15 @@ export default function OnboardingPage() {
     // Form states
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [phone, setPhone] = useState("");
     const [sobrietyDate, setSobrietyDate] = useState("");
     const [sponsor, setSponsor] = useState("");
     const [step, setStep] = useState<number>(1);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useUser();
+    const allRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
+    const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
     // Handle sign up form submission
     const handleSubmit = async (formData: FormData) => {
@@ -29,7 +32,7 @@ export default function OnboardingPage() {
             setIsLoading(true);
             setError("");
             //check required fields
-            ['firstName', 'lastName', 'sobrietyDate', 'sponsor'].forEach((requiredField) => {
+            allRequiredFields.forEach((requiredField) => {
                 if(!formData.get(requiredField)) {
                     setError( `${requiredField} is required`);
                     return;
@@ -41,8 +44,10 @@ export default function OnboardingPage() {
                 firstName: formData.get('firstName')?.toString() ?? '',
                 lastName: formData.get('lastName')?.toString() ?? '',
                 primaryEmailAddress: formData.get('email')?.toString() ?? '',
+                phone: formData.get('phone')?.toString() ?? '',
                 sobrietyDate: formData.get('sobrietyDate')?.toString() ?? '',
                 sponsor: formData.get('sponsor')?.toString() ?? '',
+                currentStep: formData.get('step')?.toString() ?? ''
             };
             const response = await createUser(userData);
 
@@ -113,10 +118,28 @@ export default function OnboardingPage() {
                         />
                     </div>
 
+                    {/* phone field */}
+                    <div>
+                        <label htmlFor="phone" className={formFieldHeaderStyle}>
+                            Phone
+                        </label>
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            autoComplete="tel-country-code"
+                            required
+                            className="relative block w-full border-0 p-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                            placeholder="phone"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                        />
+                    </div>
+
                     {/* email field */}
                     <div>
-                        <label htmlFor="email" className="sr-only">
-                            Last Name
+                        <label htmlFor="email" className={formFieldHeaderStyle}>
+                            Email
                         </label>
                         <input
                             id="email"
@@ -137,7 +160,7 @@ export default function OnboardingPage() {
 
                     {/* Sobriety date field */}
                     <div>
-                        <label htmlFor="sobrietyDate" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="sobrietyDate" className={formFieldHeaderStyle}>
                             Sobriety Date
                         </label>
                         <input
@@ -153,7 +176,7 @@ export default function OnboardingPage() {
 
                     {/* Sponsor field */}
                     <div>
-                        <label htmlFor="sponsor" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="sponsor" className={formFieldHeaderStyle}>
                             Sponsor
                         </label>
                         <input
@@ -169,7 +192,7 @@ export default function OnboardingPage() {
 
                     {/* Step field */}
                     <div>
-                        <label htmlFor="step" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="step" className={formFieldHeaderStyle}>
                             Current Step (1-12)
                         </label>
                         <input
