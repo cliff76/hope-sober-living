@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useSignUp } from "@clerk/nextjs";
+import {useSignUp, useUser} from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import {RegisteredUser, registerUser} from "@/app/users/utils";
+import {RegisteredUser} from "@/app/users/utils";
 import {createUser} from "@/app/users/actions/create";
 
 export default function OnboardingPage() {
@@ -18,6 +18,7 @@ export default function OnboardingPage() {
     const [step, setStep] = useState<number>(1);
     const [error, setError] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const { user } = useUser();
 
     // Handle sign up form submission
     const handleSubmit = async (formData: FormData) => {
@@ -34,18 +35,17 @@ export default function OnboardingPage() {
             }
 
             //create user object
-            const user: RegisteredUser = {
+            const userData: RegisteredUser = {
                 firstName: formData.get('firstName')?.toString() ?? '',
                 lastName: formData.get('lastName')?.toString() ?? '',
                 primaryEmailAddress: formData.get('email')?.toString() ?? '',
                 sobrietyDate: formData.get('sobrietyDate')?.toString() ?? '',
                 sponsor: formData.get('sponsor')?.toString() ?? '',
             };
-            console.log('Server action createUser ',user);
-            const response = await createUser(user);
-            console.log('Server response ',response);
+            const response = await createUser(userData);
 
             if (response.ok) {
+                await user?.reload();
                 // Redirect to dashboard after successful signup
                 router.push("/");
             } else {
