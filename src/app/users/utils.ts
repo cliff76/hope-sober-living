@@ -37,7 +37,6 @@ export async function registerUser(user: RegisteredUser): Promise<RegisterUserRe
         usersDB.set(user.primaryEmailAddress, user);
         return { ok: true };
     }).catch((err) => {
-        console.error('Error registering user ', err);
         return { ok: false, errors: [err.message] };
     });
 }

@@ -1,4 +1,4 @@
-import {clerkClient, clerkMiddleware, createRouteMatcher} from '@clerk/nextjs/server'
+import {clerkMiddleware, createRouteMatcher} from '@clerk/nextjs/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 const ONBOARDING_ROUTE = '/users/onboarding';
@@ -7,26 +7,19 @@ const isPublicRoute = createRouteMatcher(['/', '/testimonials', '/about', '/sign
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
     const { userId, sessionClaims, redirectToSignIn } = await auth()
-    const client = await clerkClient();
-    const updatedUser = userId ? await client?.users?.getUser(userId) : null;
-
-    console.log('Middleware: request url ', req.url, ' user id ', userId, ' session claims ', sessionClaims);
     // For users visiting /onboarding, don't try to redirect
     if (userId && isOnboardingRoute(req)) {
-        console.log('Middleware: request is onboarding route no further processing required');
         return NextResponse.next()
     }
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(req)) {
-        console.log('Redirecting to sign-in');
         return redirectToSignIn({returnBackUrl: req.url})
     }
 
     // Catch users who do not have `onboardingComplete: true` in their publicMetadata
     // Redirect them to the /onboarding route to complete onboarding
-    if (userId && !updatedUser?.publicMetadata?.onboardingComplete) {
-        console.log('Redirecting to onboarding...');
+    if (userId && !sessionClaims?.metadata?.onboardingComplete) {
         const onboardingUrl = new URL(ONBOARDING_ROUTE, req.url)
         return NextResponse.redirect(onboardingUrl)
     }
