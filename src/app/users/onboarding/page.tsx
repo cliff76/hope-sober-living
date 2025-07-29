@@ -11,8 +11,8 @@ export default function OnboardingPage() {
     const router = useRouter();
 
     // Form states
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [sobrietyDate, setSobrietyDate] = useState("");
     const [sponsor, setSponsor] = useState("");
     const [step, setStep] = useState<number>(1);
@@ -28,13 +28,15 @@ export default function OnboardingPage() {
         try {
             setIsLoading(true);
             setError("");
-            if(!formData.get('email') || !formData.get('password')
-                || !formData.get('sobrietyDate') || !formData.get('sponsor')) {
-                setError("All fields are required");
-                return;
-            }
+            //check required fields
+            ['firstName', 'lastName', 'sobrietyDate', 'sponsor'].forEach((requiredField) => {
+                if(!formData.get(requiredField)) {
+                    setError( `${requiredField} is required`);
+                    return;
+                }
+            });
 
-            //create user object
+            //create the user object
             const userData: RegisteredUser = {
                 firstName: formData.get('firstName')?.toString() ?? '',
                 lastName: formData.get('lastName')?.toString() ?? '',
@@ -76,10 +78,45 @@ export default function OnboardingPage() {
 
             <form className="mt-8 space-y-6" action={handleSubmit}>
                 <div className="-space-y-px rounded-md shadow-sm">
-                    {/* Email field */}
+                    {/* firstName field */}
+                    <div>
+                        <label htmlFor="firstName" className="sr-only">
+                            First Name
+                        </label>
+                        <input
+                            id="firstName"
+                            name="firstName"
+                            type="text"
+                            required
+                            className="relative block w-full rounded-t-md border-0 p-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                            placeholder="First Name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                        />
+                    </div>
+
+                    {/* lastName field */}
+                    <div>
+                        <label htmlFor="lastName" className="sr-only">
+                            Last Name
+                        </label>
+                        <input
+                            id="lastName"
+                            name="lastName"
+                            type="lastName"
+                            autoComplete="text"
+                            required
+                            className="relative block w-full border-0 p-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                            placeholder="Last Name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                        />
+                    </div>
+
+                    {/* email field */}
                     <div>
                         <label htmlFor="email" className="sr-only">
-                            Email address
+                            Last Name
                         </label>
                         <input
                             id="email"
@@ -87,28 +124,10 @@ export default function OnboardingPage() {
                             type="email"
                             autoComplete="email"
                             required
-                            className="relative block w-full rounded-t-md border-0 p-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                            placeholder="Email address"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-
-                    {/* Password field */}
-                    <div>
-                        <label htmlFor="password" className="sr-only">
-                            Password
-                        </label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            autoComplete="new-password"
-                            required
                             className="relative block w-full border-0 p-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="email"
+                            value={user?.primaryEmailAddress?.toString() ?? ''}
+                            readOnly
                         />
                     </div>
                 </div>
