@@ -3,7 +3,7 @@ import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
 import {MobileSidebar} from "@/components/MobileSidebar";
 
 export function Header() {
-    return <header className="md:bg-[var(--sky-blue)] text-slate-800 p-4 shadow-md sticky top-0 z-50">
+    return <header className="md:bg-[var(--sidebar-primary)] text-slate-800 p-4 shadow-md sticky top-0 z-50">
         <div className="min-h-[.5dvh] md:hidden">
             {/* Mobile Sidebar only visible on small screens */}
             <MobileSidebar />
