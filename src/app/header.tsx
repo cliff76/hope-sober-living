@@ -1,8 +1,13 @@
 import Link from "next/link";
 import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
+import {MobileSidebar} from "@/components/MobileSidebar";
 
 export function Header() {
     return <header className="md:bg-[var(--sky-blue)] text-slate-800 p-4 shadow-md sticky top-0 z-50">
+        <div className="min-h-[.5dvh] md:hidden">
+            {/* Mobile Sidebar only visible on small screens */}
+            <MobileSidebar />
+        </div>
         <nav className="hidden md:flex container mx-auto justify-between items-center">
             <Link href="/" className="text-2xl font-bold hover:text-[var(--sunrise-gold)] transition-colors">
                 Hope&#39;s Sober Living
