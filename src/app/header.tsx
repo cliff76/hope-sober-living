@@ -1,14 +1,15 @@
 import Link from "next/link";
 import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
 import {MobileSidebar} from "@/components/MobileSidebar";
+import {AboutIcon} from "@/app/components/svg/aboutIcon";
 
 export function Header() {
     return <header className="md:bg-[var(--sidebar-primary)] text-slate-800 p-4 shadow-md sticky top-0 z-50">
-        <div className="min-h-[.5dvh] md:hidden">
+        <div id="mobile-sidebar" className="min-h-[4dvh] md:hidden">
             {/* Mobile Sidebar only visible on small screens */}
-            <MobileSidebar />
+            <MobileSidebar/>
         </div>
-        <nav className="hidden md:flex container mx-auto justify-between items-center">
+        <nav id="desktop-nav" className="hidden md:flex container mx-auto justify-between items-center">
             <Link href="/" className="text-2xl font-bold hover:text-[var(--sunrise-gold)] transition-colors">
                 Hope&#39;s Sober Living
             </Link>
@@ -34,11 +35,7 @@ export function Header() {
                 </Link>
                 <Link href="/about"
                       className="px-3 py-2 hover:text-[var(--sunrise-gold)] transition-colors flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                         className="w-5 h-5 mr-1">
-                        <path
-                            d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-                    </svg>
+                    <AboutIcon />
                     About Us
                 </Link>
                 <SignedOut>
