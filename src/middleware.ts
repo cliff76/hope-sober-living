@@ -14,7 +14,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(req)) {
-        return redirectToSignIn({returnBackUrl: req.url})
+        const redirectUrl = req.nextUrl.searchParams.get("redirect_url");
+        const redirectPath = redirectUrl ? redirectUrl :'/';
+        return redirectToSignIn({returnBackUrl: new URL(redirectPath, req.url).toString()})
     }
 
     // Catch users who do not have `onboardingComplete: true` in their publicMetadata
