@@ -6,13 +6,22 @@ import {Book, Menu, User} from "lucide-react"
 import Link from "next/link"
 import {menuConfig} from "@/config/MenuConfig";
 import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
+
+const BUTTON_SIGN_IN = 'sign-in';
+
+const BUTTON_ABOUT = 'about';
 
 export function MobileSidebar() {
     const router = useRouter(); // Initialize the router
+    const pathname = usePathname();
 
-    const handleSignInClick = () => {
-        router.push('/src/app/(clerk)/sign-in'); // Navigate to the sign-in path
+    const handleSignInClick = (button: string) => {
+        if (button === BUTTON_SIGN_IN) {
+            router.push(`/sign-in?redirect_url=${encodeURIComponent(pathname)}`);
+        } else if (button === BUTTON_ABOUT) {
+            router.push('/about');
+        }
     };
 
     return (
@@ -38,11 +47,11 @@ export function MobileSidebar() {
                         </nav>
                     </SheetContent>
                 </Sheet>
-                <Button variant="outline" size="icon" className="m-2">
-                    <Book />
+                <Button variant="outline" size="icon" className="m-2" onClick={() => handleSignInClick(BUTTON_ABOUT)}>
+                    <Book/>
                 </Button>
                 <SignedOut>
-                    <Button id="userButton" variant="outline" size="icon" onClick={handleSignInClick}
+                    <Button id="userButton" variant="outline" size="icon" onClick={() => handleSignInClick(BUTTON_SIGN_IN)}
                           className="m-2">
                         <User/>
                     </Button>
