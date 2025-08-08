@@ -60,8 +60,8 @@ export default function OnboardingPage() {
             }
 
 
-        } catch (err: any) {
-            setError(err?.message || "An error occurred during sign up");
+        } catch (err: unknown) {
+            setError((err as Error)?.message || "An error occurred during sign up");
         } finally {
             setIsLoading(false);
         }

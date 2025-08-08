@@ -11,8 +11,8 @@ export async function createUser(user: RegisteredUser): Promise<CreateUserRespon
     let authResponse;
     try {
         authResponse = await auth();
-    } catch (e: any) {
-        return { ok: false, onboardingComplete: false, errors: ['Error fetching Clerk auth response' + e.message] }
+    } catch (e: unknown) {
+        return { ok: false, onboardingComplete: false, errors: ['Error fetching Clerk auth response' + (e as Error).message] }
     }
     const { userId } = authResponse;
     if (!userId) {
@@ -28,7 +28,7 @@ export async function createUser(user: RegisteredUser): Promise<CreateUserRespon
             },
         })
         return {...response, onboardingComplete: true};
-    } catch (e: any) {
-        return { ok: false, onboardingComplete: false, errors: [e.message] };
+    } catch (e: unknown) {
+        return { ok: false, onboardingComplete: false, errors: [(e as Error).message] };
     }
 }
