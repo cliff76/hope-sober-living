@@ -6,6 +6,8 @@ import {useRouter} from "next/navigation";
 import {RegisteredUser} from "@/app/users/utils";
 import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
+import {Button} from "@/components/ui/button";
+import {ChevronLeft} from "lucide-react";
 
 type InitialFormProps = {
     isLoading?: boolean,
@@ -211,7 +213,7 @@ function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     </div>;
 }
 
-function SequentialForm({isLoading, error, onNext} : InitialFormProps) {
+function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProps & {onPrevious: () => void,}) {
     const [danger, setDanger] = useState<"yes" | "no" | "">("");
     const [admitAlcoholic, setAdmitAlcoholic] = useState(false);
     const [committedToRecovery, setCommittedToRecovery] = useState(false);
@@ -253,10 +255,12 @@ function SequentialForm({isLoading, error, onNext} : InitialFormProps) {
     };
 
     return <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
-        <div>
-            <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-                Questionnaire
-            </h2>
+        <div className="flex flex-row items-center mb-6">
+            <Button variant="outline" size="icon" onClick={onPrevious} className="mr-4">
+                <ChevronLeft className="h-4 w-4" />
+                <span className="sr-only">Back</span>
+            </Button>
+            <span className="ml-4 text-center text-3xl font-bold tracking-tight text-gray-900">Questionnaire</span>
         </div>
 
         {error && (
@@ -504,5 +508,5 @@ export default function OnboardingPage() {
         <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleSubmit}/>
     );
     if(step === 2) return (
-        <SequentialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleSubmit}/>
+        <SequentialForm user={user} isLoading={isLoading || !isLoaded} error={error} onPrevious={() => setStep(1)} onNext={handleSubmit}/>
     )}
