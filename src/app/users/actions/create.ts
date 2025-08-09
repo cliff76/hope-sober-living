@@ -28,6 +28,8 @@ export async function updateUser(clientUserId: string, info: FormData): Promise<
         console.error(error);
         errors.push(error);
     }
+    console.log('Updating user with form data ', info);
+
     const client = await clerkClient();
     await client?.users?.updateUser(clientUserId, {
         publicMetadata: {
