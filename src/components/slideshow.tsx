@@ -21,7 +21,7 @@ export function Slideshow() {
         return () => clearInterval(timer); // Clean up the interval on a component unmount
     }, []);
 
-    return <div className="fixed inset-0 -z-10">
+    return <div id="slideshow" className="fixed inset-0 -z-10">
         {interiorImages.map((src, index) => (
             <Image
                 key={src}

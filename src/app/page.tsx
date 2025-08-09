@@ -21,7 +21,7 @@ export default function Home() {
                 width={200} // Adjusted size
                 height={200} // Adjusted size
                 priority
-                className="rounded-lg shadow-lg mx-auto"
+                className="border-none mx-auto"
             />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold text-[var(--foreground)] mb-6">
