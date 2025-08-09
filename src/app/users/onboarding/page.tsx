@@ -7,18 +7,21 @@ import {RegisteredUser} from "@/app/users/utils";
 import {createUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 
-function InitialForm({isLoading, user, error, onNext} : {
+type InitialFormProps = {
     isLoading?: boolean,
     user: UserResource | null | undefined,
     error?: string,
     onNext: (formData: FormData) => Promise<void>,
-}) {
+};
+
+function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
     const [sobrietyDate, setSobrietyDate] = useState("");
     const [sponsor, setSponsor] = useState("");
     const [currentStep, setCurrentStep] = useState<number>(1);
+    const [resident, setResident] = useState<"new" | "existing">("new");
 
     const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
@@ -163,13 +166,238 @@ function InitialForm({isLoading, user, error, onNext} : {
                 </div>
             </div>
 
+            {/* NEW: Hope radio buttons at the bottom of the form */}
+            <div className="mt-4">
+                <fieldset>
+                    <legend className="text-sm font-medium text-gray-700">Hope</legend>
+                    <div className="mt-2 flex flex-col gap-4">
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="resident"
+                                value="new"
+                                checked={resident === "new"}
+                                onChange={() => setResident("new")}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">New Resident (I need Hope)</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="resident"
+                                value="existing"
+                                checked={resident === "existing"}
+                                onChange={() => setResident("existing")}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">Existing Resident (I have Hope)</span>
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+
             <div>
                 <button
                     type="submit"
                     disabled={isLoading}
                     className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300"
                 >
-                    {isLoading ? "Creating account..." : "Sign up"}
+                    {isLoading ? "Creating account..." : "Next"}
+                </button>
+            </div>
+        </form>
+    </div>;
+}
+
+function SequentialForm({isLoading, user, error, onNext} : InitialFormProps) {
+    const [danger, setDanger] = useState<"yes" | "no" | "">("");
+    const [admitAlcoholic, setAdmitAlcoholic] = useState(false);
+    const [committedToRecovery, setCommittedToRecovery] = useState(false);
+    const [sober72Hours, setSober72Hours] = useState(false);
+    const [commit30Days, setCommit30Days] = useState(false);
+    const [followHouseRules, setFollowHouseRules] = useState(false);
+    const [becomeMember, setBecomeMember] = useState(false);
+    const [noSexCrimes, setNoSexCrimes] = useState(false);
+    const [acceptAll, setAcceptAll] = useState(false);
+
+    // Keep checkboxes in sync when Accept All toggled
+    const toggleAcceptAll = (checked: boolean) => {
+        setAcceptAll(checked);
+        setAdmitAlcoholic(checked);
+        setCommittedToRecovery(checked);
+        setSober72Hours(checked);
+        setCommit30Days(checked);
+        setFollowHouseRules(checked);
+        setBecomeMember(checked);
+        setNoSexCrimes(checked);
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        // Build FormData so onNext signature is respected
+        const formData = new FormData();
+        formData.set("danger", danger);
+        formData.set("admitAlcoholic", String(admitAlcoholic));
+        formData.set("committedToRecovery", String(committedToRecovery));
+        formData.set("sober72Hours", String(sober72Hours));
+        formData.set("commit30Days", String(commit30Days));
+        formData.set("followHouseRules", String(followHouseRules));
+        formData.set("becomeMember", String(becomeMember));
+        formData.set("noSexCrimes", String(noSexCrimes));
+        formData.set("acceptAll", String(acceptAll));
+
+        await onNext(formData);
+    };
+
+    return <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
+        <div>
+            <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
+                Questionnaire
+            </h2>
+        </div>
+
+        {error && (
+            <div className="rounded-md bg-red-50 p-4">
+                <div className="text-sm text-red-700">{error}</div>
+            </div>
+        )}
+
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            <div className="rounded-md shadow-sm space-y-4">
+                <fieldset>
+                    <legend className="text-sm font-medium text-gray-700">Are you in danger?</legend>
+                    <div className="mt-2 flex items-center gap-6">
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="danger"
+                                value="yes"
+                                checked={danger === "yes"}
+                                onChange={() => setDanger("yes")}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                required
+                            />
+                            <span className="text-sm text-gray-700">Yes</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="danger"
+                                value="no"
+                                checked={danger === "no"}
+                                onChange={() => setDanger("no")}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">No</span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend className="text-sm font-medium text-gray-700">Agreements</legend>
+                    <div className="mt-2 flex flex-col gap-3">
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="admitAlcoholic"
+                                checked={admitAlcoholic}
+                                onChange={(e) => { setAdmitAlcoholic(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I admit I am an alcoholic/addict</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="committedToRecovery"
+                                checked={committedToRecovery}
+                                onChange={(e) => { setCommittedToRecovery(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I am committed to my recovery</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="sober72Hours"
+                                checked={sober72Hours}
+                                onChange={(e) => { setSober72Hours(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I have been sober at least 72 hours</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="commit30Days"
+                                checked={commit30Days}
+                                onChange={(e) => { setCommit30Days(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I commit to at least 30 days</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="followHouseRules"
+                                checked={followHouseRules}
+                                onChange={(e) => { setFollowHouseRules(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I am willing to follow house rules</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="becomeMember"
+                                checked={becomeMember}
+                                onChange={(e) => { setBecomeMember(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I am willing to become a member of the Hope family</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                name="noSexCrimes"
+                                checked={noSexCrimes}
+                                onChange={(e) => { setNoSexCrimes(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm text-gray-700">I have no history of sex crimes</span>
+                        </label>
+
+                        <label className="inline-flex items-center space-x-2 mt-2">
+                            <input
+                                type="checkbox"
+                                name="acceptAll"
+                                checked={acceptAll}
+                                onChange={(e) => toggleAcceptAll(e.target.checked)}
+                                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="text-sm font-medium text-gray-900">Accept All</span>
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div>
+                <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="group relative flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-indigo-300"
+                >
+                    {isLoading ? "Saving..." : "Done"}
                 </button>
             </div>
         </form>
@@ -186,8 +414,9 @@ export default function OnboardingPage() {
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useUser();
     const initialFormRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
+    const [step, setStep] = useState<number>(1);
 
-    const handleSubmit = async (formData: FormData) => {
+    const handleInitialFormSubmit = async (formData: FormData) => {
 
         if (!isLoaded) return;
 
@@ -217,7 +446,8 @@ export default function OnboardingPage() {
             if (response.ok) {
                 await user?.reload();
                 // Redirect to dashboard after successful signup
-                router.push("/");
+                // router.push("/");
+                setStep(2);
             } else {
                 setError("Failed to save users metadata: " + response.errors?.join(',\n'));
             }
@@ -230,7 +460,9 @@ export default function OnboardingPage() {
         }
     };
 
-    return (
-        <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleSubmit}/>
+    if(step === 1)  return (
+        <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleInitialFormSubmit}/>
     );
-}
+    if(step === 2) return (
+        <SequentialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleInitialFormSubmit}/>
+    )}
