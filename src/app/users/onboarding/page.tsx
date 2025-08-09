@@ -254,6 +254,8 @@ function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProp
         await onNext(formData);
     };
 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     return <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
         <div className="flex flex-row items-center mb-6">
             <Button variant="outline" size="icon" onClick={onPrevious} className="mr-4">
