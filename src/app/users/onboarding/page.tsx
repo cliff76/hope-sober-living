@@ -16,6 +16,8 @@ type InitialFormProps = {
     onNext: (formData: FormData) => Promise<void>,
 };
 
+const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
+
 function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -25,7 +27,6 @@ function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     const [currentStep, setCurrentStep] = useState<number>(1);
     const [resident, setResident] = useState<"new" | "existing">("new");
 
-    const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
     return <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
         <div>
@@ -215,6 +216,7 @@ function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
 
 function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProps & {onPrevious: () => void,}) {
     const [danger, setDanger] = useState<"yes" | "no" | "">("");
+    const [dangerDetails, setDangerDetails] = useState<string>("");
     const [admitAlcoholic, setAdmitAlcoholic] = useState(false);
     const [committedToRecovery, setCommittedToRecovery] = useState(false);
     const [sober72Hours, setSober72Hours] = useState(false);
@@ -274,7 +276,7 @@ function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProp
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
             <div className="rounded-md shadow-sm space-y-4">
                 <fieldset>
-                    <legend className="text-sm font-medium text-gray-700">Are you in danger?</legend>
+                    <legend className="text-sm font-medium text-gray-700">Are you in any danger?</legend>
                     <div className="mt-2 flex items-center gap-6">
                         <label className="inline-flex items-center space-x-2">
                             <input
@@ -301,6 +303,21 @@ function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProp
                             <span className="text-sm text-gray-700">No</span>
                         </label>
                     </div>
+                    {danger === "yes" && <div>
+                        <label htmlFor="dangerDetails" className={formFieldHeaderStyle}>
+                            Explain your situation
+                        </label>
+                        <textarea
+                            id="dangerDetails"
+                            name="dangerDetails"
+                            rows={3}
+                            required
+                            className="relative block w-full rounded-md border-0 p-2.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                            placeholder="Eg. Urgent need of shelter, domestic situation, etc."
+                            value={dangerDetails}
+                            onChange={(e) => setDangerDetails(e.target.value)}
+                        />
+                    </div>}
                 </fieldset>
 
                 <fieldset>
