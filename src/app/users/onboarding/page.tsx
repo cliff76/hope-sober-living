@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import {useSignUp, useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {RegisteredUser} from "@/app/users/utils";
@@ -28,17 +28,18 @@ function RequiredCheckbox({label, name, checked, onChange, invalidMessage, requi
     disabled?: boolean,
     className?: string,
 }) {
+    const changeEvent = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        event.target.setCustomValidity((checked) ? "" : invalidMessage);
+        onChange?.(event);
+    },[checked, invalidMessage, onChange]);
     return <div className="flex items-center">
         <input
             id={name}
             name={name}
             type="checkbox"
             checked={checked}
-            onChange={(event) => {
-                event.target.setCustomValidity((event.target.checked) ? "" : invalidMessage);
-                onChange?.(event);
-            }}
-            onInvalid={(e: React.FormEvent<HTMLInputElement>) => e.currentTarget.setCustomValidity(invalidMessage)}
+            onChange={changeEvent}
+            onInvalid={(e: React.FormEvent<HTMLInputElement>) => e.currentTarget.setCustomValidity((checked) ? "" : invalidMessage)}
             required={required}
             disabled={disabled}
             className={className}
