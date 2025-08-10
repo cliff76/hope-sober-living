@@ -18,6 +18,35 @@ type InitialFormProps = {
 
 const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
+function RequiredCheckbox({label, name, checked, onChange, invalidMessage, required, disabled, className}: {
+    label: string,
+    name: string,
+    checked?: boolean,
+    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void,
+    invalidMessage: string,
+    required?: boolean,
+    disabled?: boolean,
+    className?: string,
+}) {
+    return <div className="flex items-center">
+        <input
+            id={name}
+            name={name}
+            type="checkbox"
+            checked={checked}
+            onChange={(event) => {
+                event.target.setCustomValidity((event.target.checked) ? "" : invalidMessage);
+                onChange?.(event);
+            }}
+            onInvalid={(e: React.FormEvent<HTMLInputElement>) => e.currentTarget.setCustomValidity(invalidMessage)}
+            required={required}
+            disabled={disabled}
+            className={className}
+        />
+        <label htmlFor={name} className="ml-2 text-sm text-gray-600">{label}</label>
+    </div>;
+}
+
 function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -324,80 +353,87 @@ function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProp
                     <legend className="text-sm font-medium text-gray-700">Agreements</legend>
                     <div className="mt-2 flex flex-col gap-3">
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
                                 name="admitAlcoholic"
+                                label="I admit I am an alcoholic/addict"
                                 checked={admitAlcoholic}
                                 onChange={(e) => { setAdmitAlcoholic(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I admit I am an alcoholic/addict</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
                                 name="committedToRecovery"
+                                label="I am committed to my recovery"
                                 checked={committedToRecovery}
                                 onChange={(e) => { setCommittedToRecovery(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I am committed to my recovery</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
                                 name="sober72Hours"
+                                label="I have been sober at least 72 hours"
                                 checked={sober72Hours}
                                 onChange={(e) => { setSober72Hours(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I have been sober at least 72 hours</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
                                 name="commit30Days"
+                                label="I commit to at least 30 days"
                                 checked={commit30Days}
                                 onChange={(e) => { setCommit30Days(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I commit to at least 30 days</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
+                                label="I am willing to follow house rules"
                                 name="followHouseRules"
                                 checked={followHouseRules}
                                 onChange={(e) => { setFollowHouseRules(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I am willing to follow house rules</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
                                 name="becomeMember"
+                                label="I am willing to become a member of the Hope family"
                                 checked={becomeMember}
                                 onChange={(e) => { setBecomeMember(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I am willing to become a member of the Hope family</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2">
-                            <input
-                                type="checkbox"
+                            <RequiredCheckbox
                                 name="noSexCrimes"
+                                label="I have no history of sex crimes"
                                 checked={noSexCrimes}
                                 onChange={(e) => { setNoSexCrimes(e.target.checked); if(!e.target.checked) setAcceptAll(false); }}
                                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500"
+                                invalidMessage="Please agree to each of the terms."
+                                required
                             />
-                            <span className="text-sm text-gray-700">I have no history of sex crimes</span>
                         </label>
 
                         <label className="inline-flex items-center space-x-2 mt-2">
