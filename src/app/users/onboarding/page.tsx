@@ -506,7 +506,9 @@ async function handleStep2(formData: FormData, onError: (error: string) => void,
             onError("User is not logged in.");
             return false;
         }
+        console.log('[Client]: Updating user...');
         const result = await updateUser(user.id, formData);
+        console.log('[Client]: User is updated. Continue processing...');
         // Redirect to dashboard after successful signup
         if (result.ok) {
             return true;
@@ -552,7 +554,10 @@ export default function OnboardingPage() {
             if (step === 2) {
                 const result = await handleStep2(formData, onError, user);
                 if(result) {
+                    console.log('[Client]: Step2 complete. Redirecting to route /');
                     router.push('/');
+                } else {
+                    console.log('[Client]: Step2 failed. Resetting step to 1 ', error);
                 }
             }
         } finally {
