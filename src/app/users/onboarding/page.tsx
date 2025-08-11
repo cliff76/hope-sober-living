@@ -511,6 +511,8 @@ async function handleStep2(formData: FormData, onError: (error: string) => void,
         console.log('[Client]: User is updated. Continue processing...');
         // Redirect to dashboard after successful signup
         if (result.ok) {
+            console.log('[Client]: Updating clerk client...');
+            await user?.reload();
             return true;
         } else {
             onError("Failed to update user. " + result.errors?.join(',\n'));
@@ -519,8 +521,6 @@ async function handleStep2(formData: FormData, onError: (error: string) => void,
     } catch (e: unknown) {
         onError("Failed to update user [" + ((e as Error).message ? (e as Error).message : e) + "]");
         return false;
-    } finally {
-        await user?.reload();
     }
 }
 
