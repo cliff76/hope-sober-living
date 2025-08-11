@@ -29,9 +29,9 @@ function RequiredCheckbox({label, name, checked, onChange, invalidMessage, requi
     className?: string,
 }) {
     const changeEvent = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        event.target.setCustomValidity((checked) ? "" : invalidMessage);
+        event.target.setCustomValidity((event.target.checked) ? "" : invalidMessage);
         onChange?.(event);
-    },[checked, invalidMessage, onChange]);
+    },[invalidMessage, onChange]);
     return <div className="flex items-center">
         <input
             id={name}
