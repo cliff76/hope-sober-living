@@ -5,16 +5,10 @@ const ONBOARDING_ROUTE = '/users/onboarding';
 const isOnboardingRoute = createRouteMatcher([ONBOARDING_ROUTE])
 const isPublicRoute = createRouteMatcher(['/', '/testimonials', '/about', '/sign-in(.*)'])
 
-function log(message: string, ...args: unknown[]) {
-    console.log(`[Middleware] ${message}`, ...args)
-}
-
 export default clerkMiddleware(async (auth, req: NextRequest) => {
     const { userId, sessionClaims, redirectToSignIn } = await auth()
-    log('Request url: ', req.url, ' User ID: ', userId, ' Session Claims: ', sessionClaims)
     // For users visiting /onboarding, don't try to redirect
     if (userId && isOnboardingRoute(req)) {
-        log('user is visiting onboarding. Processing complete.')
         return NextResponse.next()
     }
 
@@ -22,20 +16,17 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     if (!userId && !isPublicRoute(req)) {
         const redirectUrl = req.nextUrl.searchParams.get("redirect_url");
         const redirectPath = redirectUrl ? redirectUrl :'/';
-        log('user is not signed in and route is not public. Forwarding to sign-in with redirect path: ', redirectPath)
         return redirectToSignIn({returnBackUrl: new URL(redirectPath, req.url).toString()})
     }
 
     // Catch users who do not have `onboardingComplete: true` in their publicMetadata
     // Redirect them to the /onboarding route to complete onboarding
     if (userId && !sessionClaims?.metadata?.onboardingComplete) {
-        log('user IS signed in onboarding not complete. Redirecting to onboarding.')
         const onboardingUrl = new URL(ONBOARDING_ROUTE, req.url)
         return NextResponse.redirect(onboardingUrl)
     }
 
     // If the user is logged in and the route is protected, let them view.
-    log('user IS signed in. Permitting the request.')
     if (userId && !isPublicRoute(req)) return NextResponse.next()
 })
 
