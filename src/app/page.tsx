@@ -2,8 +2,15 @@
 
 import Image from "next/image";
 import {Slideshow} from "@/components/slideshow";
+import {Button} from "@/components/ui/button";
+import {usePathname, useRouter} from "next/navigation";
 
 export default function Home() {
+    const router = useRouter(); // Initialize the router
+    const pathname = usePathname();
+    const doSignin = () => {
+        router.push(`/sign-in?redirect_url=${encodeURIComponent(pathname)}`);
+    }
   return (
     <>
       {/* Background Image Slideshow */}
@@ -34,6 +41,7 @@ export default function Home() {
           <p className="text-md sm:text-lg text-slate-700 dark:text-stone-300 max-w-2xl">
             Discover a place where hope is restored and futures are rebuilt.
           </p>
+            <Button variant="default" className="m-2" onClick={doSignin}>Get Hope!</Button>
         </div>
       </div>
     </>
