@@ -2,7 +2,7 @@
 
 import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet"
 import {Button} from "@/components/ui/button"
-import {Book, Menu, User} from "lucide-react"
+import {Menu} from "lucide-react"
 import Link from "next/link"
 import {menuConfig} from "@/config/MenuConfig";
 import {SignedIn, SignedOut, UserButton} from "@clerk/nextjs";
