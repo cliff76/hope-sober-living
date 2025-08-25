@@ -47,13 +47,13 @@ export function MobileSidebar() {
                         </nav>
                     </SheetContent>
                 </Sheet>
-                <Button variant="outline" size="icon" className="m-2" onClick={() => handleSignInClick(BUTTON_ABOUT)}>
-                    <Book/>
+                <Button variant="outline" className="m-2" onClick={() => handleSignInClick(BUTTON_ABOUT)}>
+                    About
                 </Button>
                 <SignedOut>
-                    <Button id="userButton" variant="outline" size="icon" onClick={() => handleSignInClick(BUTTON_SIGN_IN)}
+                    <Button id="userButton" variant="outline" onClick={() => handleSignInClick(BUTTON_SIGN_IN)}
                           className="m-2">
-                        <User/>
+                        Sign In
                     </Button>
                 </SignedOut>
                 <SignedIn>
