@@ -16,6 +16,8 @@ type InitialFormProps = {
     onNext: (formData: FormData) => Promise<void>,
 };
 
+type SequentialFormProps = InitialFormProps & {hasHope: boolean, onPrevious: () => void};
+
 const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
 function RequiredCheckbox({label, name, checked, onChange, invalidMessage, required, disabled, className}: {
@@ -244,17 +246,17 @@ function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     </div>;
 }
 
-function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProps & {onPrevious: () => void,}) {
+function SequentialForm({isLoading, error, hasHope, onPrevious, onNext} : SequentialFormProps) {
     const [danger, setDanger] = useState<"yes" | "no" | "">("");
     const [dangerDetails, setDangerDetails] = useState<string>("");
-    const [admitAlcoholic, setAdmitAlcoholic] = useState(false);
-    const [committedToRecovery, setCommittedToRecovery] = useState(false);
-    const [sober72Hours, setSober72Hours] = useState(false);
-    const [commit30Days, setCommit30Days] = useState(false);
-    const [followHouseRules, setFollowHouseRules] = useState(false);
-    const [becomeMember, setBecomeMember] = useState(false);
-    const [noSexCrimes, setNoSexCrimes] = useState(false);
-    const [acceptAll, setAcceptAll] = useState(false);
+    const [admitAlcoholic, setAdmitAlcoholic] = useState(hasHope);
+    const [committedToRecovery, setCommittedToRecovery] = useState(hasHope);
+    const [sober72Hours, setSober72Hours] = useState(hasHope);
+    const [commit30Days, setCommit30Days] = useState(hasHope);
+    const [followHouseRules, setFollowHouseRules] = useState(hasHope);
+    const [becomeMember, setBecomeMember] = useState(hasHope);
+    const [noSexCrimes, setNoSexCrimes] = useState(hasHope);
+    const [acceptAll, setAcceptAll] = useState(hasHope);
 
     // Keep checkboxes in sync when Accept All toggled
     const toggleAcceptAll = (checked: boolean) => {
@@ -350,6 +352,14 @@ function SequentialForm({isLoading, error, onPrevious, onNext} : InitialFormProp
                     </div>}
                 </fieldset>
 
+                <div>
+                    <h3 className="text-lg font-medium text-gray-900">
+                        {hasHope ? "Update" : "Complete"} your Agreement
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500">
+                        Please accept all of the following terms.
+                    </p>
+                </div>
                 <fieldset>
                     <legend className="text-sm font-medium text-gray-700">Agreements</legend>
                     <div className="mt-2 flex flex-col gap-3">
@@ -535,6 +545,8 @@ export default function OnboardingPage() {
         setError(error);
     }
 
+    const [hasHope, setHasHope] = useState<boolean>(false);
+
     const handleSubmit = async (formData: FormData) => {
 
         if (!isLoaded) return;
@@ -544,6 +556,7 @@ export default function OnboardingPage() {
             setIsLoading(true);
             if (step === 1) {
                 const result = await handleStep1(formData, onError);
+                setHasHope(formData.get('resident') === 'existing');
                 if(result) {
                     setStep(2);
                 }
@@ -563,5 +576,5 @@ export default function OnboardingPage() {
         <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleSubmit}/>
     );
     if(step === 2) return (
-        <SequentialForm user={user} isLoading={isLoading || !isLoaded} error={error} onPrevious={() => setStep(1)} onNext={handleSubmit}/>
+        <SequentialForm user={user} isLoading={isLoading || !isLoaded} error={error} hasHope={hasHope} onPrevious={() => setStep(1)} onNext={handleSubmit}/>
     )}
