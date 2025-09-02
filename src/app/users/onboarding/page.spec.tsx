@@ -3,7 +3,9 @@ import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
-import OnboardingPage, {handleStep1, handleStep2, InitialForm, SequentialForm} from "./page";
+import OnboardingPage from "./page";
+import {handleStep1, handleStep2} from "./handlers";
+import {InitialForm, SequentialForm} from "./forms";
 
 import * as CreateModule from "@/app/users/actions/create";
 import * as Clerk from "@clerk/nextjs";
