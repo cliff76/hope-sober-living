@@ -1,6 +1,6 @@
 "use client";
 
-import {useCallback, useState} from "react";
+import {useState} from "react";
 import {useSignUp, useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {RegisteredUser} from "@/app/users/utils";
@@ -8,6 +8,7 @@ import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 import {Button} from "@/components/ui/button";
 import {ChevronLeft} from "lucide-react";
+import {RequiredCheckbox} from "@/components/requiredCheckbox";
 
 type InitialFormProps = {
     isLoading?: boolean,
@@ -19,36 +20,6 @@ type InitialFormProps = {
 type SequentialFormProps = InitialFormProps & {hasHope: boolean, onPrevious: () => void};
 
 const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
-
-export function RequiredCheckbox({label, name, checked, onChange, invalidMessage, required, disabled, className}: {
-    label: string,
-    name: string,
-    checked?: boolean,
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void,
-    invalidMessage: string,
-    required?: boolean,
-    disabled?: boolean,
-    className?: string,
-}) {
-    const changeEvent = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-        event.target.setCustomValidity((event.target.checked) ? "" : invalidMessage);
-        onChange?.(event);
-    },[invalidMessage, onChange]);
-    return <div className="flex items-center">
-        <input
-            id={name}
-            name={name}
-            type="checkbox"
-            checked={checked}
-            onChange={changeEvent}
-            onInvalid={(e: React.FormEvent<HTMLInputElement>) => e.currentTarget.setCustomValidity((checked) ? "" : invalidMessage)}
-            required={required}
-            disabled={disabled}
-            className={className}
-        />
-        <label htmlFor={name} className="ml-2 text-sm text-gray-600">{label}</label>
-    </div>;
-}
 
 export function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     const [firstName, setFirstName] = useState("");
