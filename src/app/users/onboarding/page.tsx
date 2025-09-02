@@ -20,7 +20,7 @@ type SequentialFormProps = InitialFormProps & {hasHope: boolean, onPrevious: () 
 
 const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
-function RequiredCheckbox({label, name, checked, onChange, invalidMessage, required, disabled, className}: {
+export function RequiredCheckbox({label, name, checked, onChange, invalidMessage, required, disabled, className}: {
     label: string,
     name: string,
     checked?: boolean,
@@ -50,7 +50,7 @@ function RequiredCheckbox({label, name, checked, onChange, invalidMessage, requi
     </div>;
 }
 
-function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
+export function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
@@ -246,7 +246,7 @@ function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
     </div>;
 }
 
-function SequentialForm({isLoading, error, hasHope, onPrevious, onNext} : SequentialFormProps) {
+export function SequentialForm({isLoading, error, hasHope, onPrevious, onNext} : SequentialFormProps) {
     const [danger, setDanger] = useState<"yes" | "no" | "">("");
     const [dangerDetails, setDangerDetails] = useState<string>("");
     const [admitAlcoholic, setAdmitAlcoholic] = useState(hasHope);
@@ -474,7 +474,7 @@ function SequentialForm({isLoading, error, hasHope, onPrevious, onNext} : Sequen
     </div>;
 }
 
-async function handleStep1(formData: FormData, onError: (error: string) => void) {
+export async function handleStep1(formData: FormData, onError: (error: string) => void) {
     const initialFormRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
     try {
         //check required fields
@@ -510,7 +510,7 @@ async function handleStep1(formData: FormData, onError: (error: string) => void)
     }
 }
 
-async function handleStep2(formData: FormData, onError: (error: string) => void, user?: UserResource | null): Promise<boolean> {
+export async function handleStep2(formData: FormData, onError: (error: string) => void, user?: UserResource | null): Promise<boolean> {
     try {
         if (!user) {
             onError("User is not logged in.");
