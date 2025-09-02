@@ -11,7 +11,7 @@ import {ChevronLeft} from "lucide-react";
 
 type InitialFormProps = {
     isLoading?: boolean,
-    user: UserResource | null | undefined,
+    user?: UserResource | null | undefined,
     error?: string,
     onNext: (formData: FormData) => Promise<void>,
 };
@@ -292,7 +292,7 @@ export function SequentialForm({isLoading, error, hasHope, onPrevious, onNext} :
 
     return <div className="w-full max-w-md space-y-8 rounded-lg bg-white p-8 shadow-md">
         <div className="flex flex-row items-center mb-6">
-            <Button variant="outline" size="icon" onClick={onPrevious} className="mr-4">
+            <Button data-testid="previous-button" variant="outline" size="icon" onClick={onPrevious} className="mr-4">
                 <ChevronLeft className="h-4 w-4" />
                 <span className="sr-only">Back</span>
             </Button>

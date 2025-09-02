@@ -1,18 +1,14 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { vi, describe, it, expect, beforeEach } from "vitest";
+import {beforeEach, describe, expect, it, vi} from "vitest";
 
-import OnboardingPage, {
-    RequiredCheckbox,
-    InitialForm,
-    SequentialForm,
-    handleStep1,
-    handleStep2
-} from "./page";
+import OnboardingPage, {handleStep1, handleStep2, InitialForm, RequiredCheckbox, SequentialForm} from "./page";
 
 import * as CreateModule from "@/app/users/actions/create";
 import * as Clerk from "@clerk/nextjs";
+import {UserResource, UseSignUpReturn, UseUserReturn} from "@clerk/types";
+import {CreateUserResponse} from "@/app/users/actions/create";
 
 vi.mock("@/app/users/actions/create");
 
@@ -26,16 +22,16 @@ vi.mock("next/navigation", () => ({
 describe("Onboarding components and functions", () => {
     const createUserMock = vi.mocked(CreateModule.createUser);
     const updateUserMock = vi.mocked(CreateModule.updateUser);
+    const onNext = vi.fn();
 
     beforeEach(() => {
         vi.clearAllMocks();
         pushMock.mockClear();
         // stub window.scrollTo used in SequentialForm
-        // @ts-ignore
         window.scrollTo = vi.fn();
         // default clerk behavior
-        vi.spyOn(Clerk, "useSignUp").mockReturnValue({ isLoaded: true } as any);
-        vi.spyOn(Clerk, "useUser").mockReturnValue({ user: { id: "u1", primaryEmailAddress: "test@example.com", reload: vi.fn() } } as any);
+        vi.spyOn(Clerk, "useSignUp").mockReturnValue({ isLoaded: true } as unknown as UseSignUpReturn);
+        vi.spyOn(Clerk, "useUser").mockReturnValue({ user: { id: "u1", primaryEmailAddress: "test@example.com", reload: vi.fn() } } as unknown as UseUserReturn);
     });
 
     it("RequiredCheckbox calls onChange and manages validity", async () => {
@@ -58,9 +54,8 @@ describe("Onboarding components and functions", () => {
         expect(checkbox2.validationMessage).toBe("");
     });
 
-    it("InitialForm renders fields and respects isLoading and error", async () => {
-        const onNext = vi.fn();
-        render(<InitialForm isLoading={false} user={{ primaryEmailAddress: "hello@x.com" } as any} error="oh no" onNext={onNext} />);
+    it("renders fields and shows the given error text", async () => {
+        render(<InitialForm isLoading={false} user={{primaryEmailAddress: "hello@x.com"} as unknown as UserResource} error="oh no" onNext={onNext} />);
 
         expect(screen.getByText("Create your account")).toBeInTheDocument();
         expect(screen.getByText("oh no")).toBeInTheDocument();
@@ -84,15 +79,18 @@ describe("Onboarding components and functions", () => {
         expect(sobriety.value).toBe("2020-01-01");
         expect(sponsor.value).toBe("Sam");
 
-        // when isLoading true, button is disabled and shows Creating account...
-        render(<InitialForm isLoading={true} user={{ primaryEmailAddress: "hello@x.com" } as any} error={""} onNext={onNext} />);
+    });
+
+    it("Disables the create account button when isLoading is true", () => {
+        // when isLoading true, the create account button is disabled and shows Creating account...
+        render(<InitialForm isLoading={true} user={{ primaryEmailAddress: "hello@x.com" } as unknown as UserResource} error={""} onNext={onNext} />);
         const btn = screen.getByRole("button", { name: /Creating account.../i }) as HTMLButtonElement;
         expect(btn).toBeDisabled();
     });
 
     it("SequentialForm toggles Accept All and submits form", async () => {
         const onPrevious = vi.fn();
-        const onNext = vi.fn(async (fd: FormData) => { /* no-op */ });
+        const onNext = vi.fn(async () => { /* no-op */ });
 
         render(<SequentialForm isLoading={false} error={""} hasHope={false} onPrevious={onPrevious} onNext={onNext} />);
 
@@ -119,20 +117,20 @@ describe("Onboarding components and functions", () => {
 
         await waitFor(() => {
             expect(onNext).toHaveBeenCalled();
-            const fd = onNext.mock.calls[0][0] as FormData;
+            const fd = onNext.mock.calls[0].pop() as unknown as FormData;
             expect(fd.get("admitAlcoholic")).toBe("true");
             expect(fd.get("acceptAll")).toBe("true");
             expect(fd.get("danger")).toBe("yes");
         });
 
         // previous button triggers onPrevious
-        const backBtn = screen.getByRole("button", { hidden: true }) // Button has sr-only inside; fallback: call onPrevious directly via the passed prop
+        expect(screen.getByTestId("previous-button")).toBeInTheDocument()
         expect(onPrevious).toBeDefined();
     });
 
     describe("handleStep1", () => {
         it("returns true on successful createUser", async () => {
-            createUserMock.mockResolvedValueOnce({ ok: true } as any);
+            createUserMock.mockResolvedValueOnce({ ok: true } as unknown as CreateUserResponse);
             const fd = new FormData();
             fd.set("firstName", "A");
             fd.set("lastName", "B");
@@ -150,7 +148,7 @@ describe("Onboarding components and functions", () => {
         });
 
         it("calls onError and returns false when createUser fails", async () => {
-            createUserMock.mockResolvedValueOnce({ ok: false, errors: ["boom"] } as any);
+            createUserMock.mockResolvedValueOnce({ ok: false, errors: ["boom"] } as unknown as CreateUserResponse);
             const fd = new FormData();
             fd.set("firstName", "A");
             fd.set("lastName", "B");
@@ -194,9 +192,9 @@ describe("Onboarding components and functions", () => {
         });
 
         it("returns true and reloads user on success", async () => {
-            updateUserMock.mockResolvedValueOnce({ ok: true } as any);
+            updateUserMock.mockResolvedValueOnce({ ok: true } as unknown as CreateUserResponse);
             const mockedReload = vi.fn();
-            const user = { id: "u1", reload: mockedReload } as any;
+            const user = { id: "u1", reload: mockedReload } as unknown as UserResource;
             const onError = vi.fn();
             const fd = new FormData();
             const result = await handleStep2(fd, onError, user);
