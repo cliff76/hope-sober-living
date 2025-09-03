@@ -113,4 +113,15 @@ describe("Onboarding Forms", () => {
         expect(screen.getByTestId("previous-button")).toBeInTheDocument()
         expect(onPrevious).toBeDefined();
     });
+
+    it("shows error text when error prop provided", () => {
+        const onPrevious = vi.fn();
+        const onNext = vi.fn();
+        render(<SequentialForm isLoading={false} error={"some error"} hasHope={false} onPrevious={onPrevious} onNext={onNext} />);
+
+        // Main heading should still render
+        expect(screen.getByText("Questionnaire")).toBeInTheDocument();
+        // Error passed via prop should be displayed
+        expect(screen.getByText("some error")).toBeInTheDocument();
+    });
 });
