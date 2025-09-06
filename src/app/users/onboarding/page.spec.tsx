@@ -88,4 +88,26 @@ describe("OnboardingPage", () => {
             expect(pushMock).toHaveBeenCalledWith('/');
         });
     });
+
+    it("calls handleStep1 with roles from user metadata", async () => {
+        const roles = ["test-role"];
+        vi.spyOn(Clerk, "useUser").mockReturnValue({
+            user: {
+                id: "u1",
+                primaryEmailAddress: "test@example.com",
+                reload: vi.fn(),
+                publicMetadata: { roles }
+            }
+        } as unknown as UseUserReturn);
+        mockedHandleStep1.mockResolvedValue(true);
+        const formData = new FormData();
+        render(<OnboardingPage />);
+
+        const onNext = mockedInitialForm.mock.calls[0][0].onNext;
+        await onNext(formData);
+
+        await waitFor(() => {
+            expect(mockedHandleStep1).toHaveBeenCalledWith(formData, roles, expect.any(Function));
+        });
+    });
 });
