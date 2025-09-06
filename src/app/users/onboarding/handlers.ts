@@ -1,4 +1,4 @@
-import {RegisteredUser} from "@/app/users/utils";
+import {RegisteredUser} from "@/features/users/db/users";
 import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 

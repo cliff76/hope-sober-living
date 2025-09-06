@@ -1,12 +1,12 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import {describe, it, expect, vi, beforeEach, afterEach, Mock} from 'vitest';
 import { createUser, updateUser } from './create';
-import type { RegisteredUser } from '@/app/users/utils';
-import * as utilsModule from '@/app/users/utils';
+import type { RegisteredUser } from '@/features/users/db/users';
+import * as utilsModule from '@/features/users/db/users';
 import * as clerkModule from '@clerk/nextjs/server';
 
-vi.mock('@/app/users/utils', async () => {
+vi.mock('@/features/users/db/users', async () => {
   // import the real module so types and other exports remain intact
-  const actual = await vi.importActual<typeof import('@/app/users/utils')>('@/app/users/utils');
+  const actual = await vi.importActual<typeof import('@/features/users/db/users')>('@/features/users/db/users');
   return {
     ...actual,
     registerUser: vi.fn(),
@@ -21,9 +21,9 @@ vi.mock('@clerk/nextjs/server', () => {
 });
 
 describe('createUser and updateUser', () => {
-  const mockedRegisterUser = (utilsModule as unknown as { registerUser: vi.Mock }).registerUser as vi.Mock;
-  const mockedAuth = (clerkModule as unknown as { auth: vi.Mock }).auth as vi.Mock;
-  const mockedClerkClient = (clerkModule as unknown as { clerkClient: vi.Mock }).clerkClient as vi.Mock;
+  const mockedRegisterUser = utilsModule.registerUser as Mock;
+  const mockedAuth = clerkModule.auth as unknown as Mock;
+  const mockedClerkClient = clerkModule.clerkClient as Mock;
 
   const sampleUser: RegisteredUser = {
     primaryEmailAddress: 'test@example.com',
