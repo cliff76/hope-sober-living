@@ -1,6 +1,6 @@
 'use server'
 
-import {RegisteredUser, registerUser, RegisterUserResponse} from "@/app/users/utils";
+import {RegisteredUser, registerUser, RegisterUserResponse} from "@/features/users/db/users";
 import {auth, clerkClient} from "@clerk/nextjs/server";
 
 export type CreateUserResponse = RegisterUserResponse
