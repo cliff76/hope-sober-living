@@ -43,23 +43,10 @@ describe('createUser and updateUser', () => {
   });
 
     describe('createUser', () => {
-        it('returns error when auth throws', async () => {
-            mockedAuth.mockRejectedValue(new Error('clerk fail'));
-            const result = await createUser(sampleUser);
-            expect(result.ok).toBe(false);
-            expect(result.errors).toEqual(['Error fetching Clerk auth responseclerk fail']);
-        });
-
-        it('returns error when no userId', async () => {
-            mockedAuth.mockResolvedValue({}); // no userId
-            const result = await createUser(sampleUser);
-            expect(result).toEqual({ ok: false, errors: ['No Logged In User'] });
-        });
-
         it('returns registerUser result on success (ok true)', async () => {
             mockedAuth.mockResolvedValue({ userId: 'abc' });
             mockedRegisterUser.mockResolvedValue({ ok: true });
-            const result = await createUser(sampleUser);
+            const result = await createUser(sampleUser, []);
             expect(result).toEqual({ ok: true });
             expect(mockedRegisterUser).toHaveBeenCalledWith(sampleUser);
         });
@@ -67,7 +54,7 @@ describe('createUser and updateUser', () => {
         it('returns registerUser failure result (ok false)', async () => {
             mockedAuth.mockResolvedValue({ userId: 'abc' });
             mockedRegisterUser.mockResolvedValue({ ok: false, errors: ['db error'] });
-            const result = await createUser(sampleUser);
+            const result = await createUser(sampleUser, []);
             expect(result).toEqual({ ok: false, errors: ['db error'] });
             expect(mockedRegisterUser).toHaveBeenCalledWith(sampleUser);
         });

@@ -5,18 +5,7 @@ import {auth, clerkClient} from "@clerk/nextjs/server";
 
 export type CreateUserResponse = RegisterUserResponse
 
-export async function createUser(user: RegisteredUser): Promise<CreateUserResponse> {
-    let authResponse;
-    try {
-        authResponse = await auth();
-    } catch (e: unknown) {
-        return { ok: false, errors: ['Error fetching Clerk auth response' + (e as Error).message] }
-    }
-    const { userId } = authResponse;
-    if (!userId) {
-        return { ok: false, errors: ['No Logged In User'] }
-    }
-
+export async function createUser(user: RegisteredUser, roles: string []): Promise<CreateUserResponse> {
     return await registerUser(user);
 }
 

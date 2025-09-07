@@ -23,7 +23,7 @@ export async function handleStep1(formData: FormData, roles:string[], onError: (
             sponsor: formData.get('sponsor')?.toString() ?? '',
             currentStep: formData.get('step')?.toString() ?? ''
         };
-        const response = await createUser(userData);
+        const response = await createUser(userData, roles);
 
         if (response.ok) {
             return true;
