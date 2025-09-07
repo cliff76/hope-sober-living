@@ -29,7 +29,7 @@ describe("Onboarding Handlers", () => {
             fd.set("step", "1");
 
             const onError = vi.fn();
-            const result = await handleStep1(fd, onError);
+            const result = await handleStep1(fd, [], onError);
             expect(result).toBe(true);
             expect(onError).not.toHaveBeenCalled();
             expect(createUserMock).toHaveBeenCalled();
@@ -47,7 +47,7 @@ describe("Onboarding Handlers", () => {
             fd.set("step", "1");
 
             const onError = vi.fn();
-            const result = await handleStep1(fd, onError);
+            const result = await handleStep1(fd, [], onError);
             expect(result).toBe(false);
             expect(onError).toHaveBeenCalledWith(expect.stringContaining("Failed to save users metadata"));
         });
@@ -64,7 +64,7 @@ describe("Onboarding Handlers", () => {
             fd.set("step", "1");
 
             const onError = vi.fn();
-            const result = await handleStep1(fd, onError);
+            const result = await handleStep1(fd, [], onError);
             expect(result).toBe(false);
             expect(onError).toHaveBeenCalledWith(expect.stringContaining("bad"));
         });

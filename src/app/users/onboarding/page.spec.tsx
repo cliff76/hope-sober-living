@@ -1,5 +1,5 @@
 import React from "react";
-import {render, waitFor} from "@testing-library/react";
+import {act, render, waitFor} from "@testing-library/react";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
 import OnboardingPage from "./page";
@@ -103,8 +103,10 @@ describe("OnboardingPage", () => {
         const formData = new FormData();
         render(<OnboardingPage />);
 
-        const onNext = mockedInitialForm.mock.calls[0][0].onNext;
-        await onNext(formData);
+        await act(async () => {
+            const onNext = mockedInitialForm.mock.calls[0][0].onNext;
+            await onNext(formData);
+        })
 
         await waitFor(() => {
             expect(mockedHandleStep1).toHaveBeenCalledWith(formData, roles, expect.any(Function));
