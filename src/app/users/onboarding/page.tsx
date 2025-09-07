@@ -31,7 +31,7 @@ export default function OnboardingPage() {
             setError("");
             setIsLoading(true);
             if (step === 1) {
-                const result = await handleStep1(formData, onError);
+                const result = await handleStep1(formData, user?.publicMetadata?.roles ?? [], onError);
                 setHasHope(formData.get('resident') === 'existing');
                 if(result) {
                     setStep(2);
