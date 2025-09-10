@@ -91,13 +91,14 @@ describe("OnboardingPage", () => {
 
     it("calls handleStep1 with roles from user metadata", async () => {
         const roles = ["test-role"];
+        const testUser = {
+            id: "u1",
+            primaryEmailAddress: "test@example.com",
+            reload: vi.fn(),
+            publicMetadata: { roles }
+        };
         vi.spyOn(Clerk, "useUser").mockReturnValue({
-            user: {
-                id: "u1",
-                primaryEmailAddress: "test@example.com",
-                reload: vi.fn(),
-                publicMetadata: { roles }
-            }
+            user: testUser
         } as unknown as UseUserReturn);
         mockedHandleStep1.mockResolvedValue(true);
         const formData = new FormData();
@@ -109,7 +110,7 @@ describe("OnboardingPage", () => {
         })
 
         await waitFor(() => {
-            expect(mockedHandleStep1).toHaveBeenCalledWith(formData, roles, expect.any(Function));
+            expect(mockedHandleStep1).toHaveBeenCalledWith(testUser.id, formData, roles, expect.any(Function));
         });
     });
 });

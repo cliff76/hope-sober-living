@@ -1,7 +1,7 @@
-import {describe, it, expect, vi, beforeEach, afterEach, Mock} from 'vitest';
-import { createUser, updateUser } from './create';
-import type { RegisteredUser } from '@/features/users/db/users';
+import {afterEach, beforeEach, describe, expect, it, Mock, vi} from 'vitest';
+import {createUser, updateUser} from './create';
 import * as utilsModule from '@/features/users/db/users';
+import {RegisteredUser} from '@/features/users/db/users';
 import * as clerkModule from '@clerk/nextjs/server';
 
 vi.mock('@/features/users/db/users', async () => {
@@ -9,7 +9,8 @@ vi.mock('@/features/users/db/users', async () => {
   const actual = await vi.importActual<typeof import('@/features/users/db/users')>('@/features/users/db/users');
   return {
     ...actual,
-    registerUser: vi.fn(),
+      updateUserRoles: vi.fn(),
+      createNewResident: vi.fn(),
   };
 });
 
@@ -21,17 +22,18 @@ vi.mock('@clerk/nextjs/server', () => {
 });
 
 describe('createUser and updateUser', () => {
-  const mockedRegisterUser = utilsModule.registerUser as Mock;
+  const mockedRegisterUser = utilsModule.createNewResident as Mock;
   const mockedAuth = clerkModule.auth as unknown as Mock;
   const mockedClerkClient = clerkModule.clerkClient as Mock;
 
   const sampleUser: RegisteredUser = {
-    primaryEmailAddress: 'test@example.com',
-    fullName: 'Test User',
-    firstName: 'Test',
-    lastName: 'User',
-    emailAddresses: [{ emailAddress: 'test@example.com', verified: true }],
-    phone: '000-000-0000',
+      externalId: 'abc',
+      primaryEmailAddress: 'test@example.com',
+      fullName: 'Test User',
+      firstName: 'Test',
+      lastName: 'User',
+      emailAddresses: [{emailAddress: 'test@example.com', verified: true}],
+      phone: '000-000-0000',
   };
 
   beforeEach(() => {

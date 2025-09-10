@@ -2,7 +2,7 @@ import {RegisteredUser} from "@/features/users/db/users";
 import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 
-export async function handleStep1(formData: FormData, roles:string[], onError: (error: string) => void) {
+export async function handleStep1(userId: string, formData: FormData, roles:string[], onError: (error: string) => void) {
     const initialFormRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
     try {
         //check required fields
@@ -15,6 +15,7 @@ export async function handleStep1(formData: FormData, roles:string[], onError: (
 
         //create the user object
         const userData: RegisteredUser = {
+            externalId: userId,
             firstName: formData.get('firstName')?.toString() ?? '',
             lastName: formData.get('lastName')?.toString() ?? '',
             primaryEmailAddress: formData.get('email')?.toString() ?? '',

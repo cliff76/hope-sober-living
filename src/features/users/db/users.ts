@@ -1,4 +1,11 @@
+import {clerkClient} from "@clerk/nextjs/server";
+
+export const ROLES_RESIDENT = 'resident';
+
+const DEFAULT_ROLES = [ROLES_RESIDENT];
+
 const usersDB = new Map<string, RegisteredUser>().set('clifton@email.com', {
+    externalId: '1234567890',
     primaryEmailAddress: 'clifton@email.com',
     fullName: 'Clifton Craig',
     firstName: 'Clifton',
@@ -12,6 +19,8 @@ const usersDB = new Map<string, RegisteredUser>().set('clifton@email.com', {
     phone: '123-456-7890',
 });
 export type RegisteredUser = {
+    id?: string;
+    externalId: string;
     primaryEmailAddress: string;
     fullName?: string;
     firstName: string;
@@ -35,9 +44,19 @@ export function isUserRegistered(user: RegisteredUser | null | undefined) {
     return usersDB.has(user?.primaryEmailAddress ?? '');
 }
 
-export async function registerUser(user: RegisteredUser): Promise<RegisterUserResponse> {
+export async function updateUserRoles(userId: string, roles: string[] = DEFAULT_ROLES) {
+    const client = await clerkClient()
+    await client.users.updateUserMetadata(userId, {
+        publicMetadata: {
+            roles: roles,
+        },
+    })
+}
+
+export async function createNewResident(user: RegisteredUser): Promise<RegisterUserResponse> {
     return Promise.resolve().then(() => {
-        usersDB.set(user.primaryEmailAddress, user);
+        user.id = user.primaryEmailAddress;
+        usersDB.set(user.id, user);
         console.log('Registered users', usersDB);
         return { ok: true };
     }).catch((err) => {
