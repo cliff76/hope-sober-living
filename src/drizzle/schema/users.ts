@@ -1,8 +1,13 @@
 import {date, numeric, pgTable, text, varchar} from "drizzle-orm/pg-core";
 import {createdAt, updatedAt} from "@/drizzle/schema/utils";
+import {createId} from "@paralleldrive/cuid2";
 
 export const UsersTable = pgTable("users", {
-    id: varchar().primaryKey(),
+    id: varchar('id', { length: 30 }) // CUID2s are typically around 24-30 chars
+        .primaryKey()
+        .notNull()
+        .$defaultFn(() => createId()),
+    externalId: varchar('external_id', { length: 255 }).notNull().unique(),
     name: varchar({ length: 255 }).notNull(),
     birthdate: date().notNull(),
     email: varchar({ length: 255 }).notNull().unique(),
@@ -13,7 +18,7 @@ export const UsersTable = pgTable("users", {
 });
 
 export const EmployeesTable = pgTable("employees", {
-    userId: varchar('user_id').primaryKey().references(() => UsersTable.id),
+    userId: varchar('user_id', { length: 30 }).primaryKey().references(() => UsersTable.id),
     title: varchar({ length: 255 }).notNull(),
     workEmail: varchar({ length: 255 }).notNull().unique(),
     workPhoneNumber: varchar('work_phone_number', { length: 25 }).notNull().unique(),
@@ -23,7 +28,7 @@ export const EmployeesTable = pgTable("employees", {
 });
 
 export const ResidentsTable = pgTable("residents", {
-    userId: varchar('user_id').primaryKey().references(() => UsersTable.id),
+    userId: varchar('user_id', { length: 30 }).primaryKey().references(() => UsersTable.id),
     sobrietyDate: date('sobriety_date').notNull(),
     sponsor: varchar({ length: 255 }),
     step: numeric('step').notNull(),
