@@ -1,12 +1,25 @@
 'use server'
 
-import {RegisteredUser, registerUser, RegisterUserResponse} from "@/features/users/db/users";
+import {
+    RegisteredUser,
+    createNewResident,
+    RegisterUserResponse,
+    updateUserRoles,
+    ROLES_RESIDENT
+} from "@/features/users/db/users";
 import {auth, clerkClient} from "@clerk/nextjs/server";
 
 export type CreateUserResponse = RegisterUserResponse
 
 export async function createUser(user: RegisteredUser, roles: string []): Promise<CreateUserResponse> {
-    return await registerUser(user);
+    if(!roles || roles.length === 0) {
+        updateUserRoles(user.externalId)
+        return await createNewResident(user);
+    }
+    if(roles.includes(ROLES_RESIDENT))
+        return await createNewResident(user);
+
+    throw new Error('Unsupported roles [' + roles.join(', ' + ']'));
 }
 
 export async function updateUser(clientUserId: string, info: FormData): Promise<CreateUserResponse> {

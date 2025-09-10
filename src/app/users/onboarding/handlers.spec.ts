@@ -5,12 +5,14 @@ import {handleStep1, handleStep2} from "./handlers";
 import * as CreateModule from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 import {CreateUserResponse} from "@/app/users/actions/create";
+import {getRandomInteger} from "@/utis/utils";
 
 vi.mock("@/app/users/actions/create");
 
 describe("Onboarding Handlers", () => {
     const createUserMock = vi.mocked(CreateModule.createUser);
     const updateUserMock = vi.mocked(CreateModule.updateUser);
+    const randomId = () => getRandomInteger(100000, 999999).toString();
 
     beforeEach(() => {
         vi.clearAllMocks();
@@ -18,6 +20,7 @@ describe("Onboarding Handlers", () => {
     describe("handleStep1", () => {
         const formData = new FormData();
         const expectedUser = {
+            "externalId": expect.any(String),
             "currentStep": "1",
             "firstName": "A",
             "lastName": "B",
@@ -42,7 +45,7 @@ describe("Onboarding Handlers", () => {
 
             const onError = vi.fn();
             const roles = ["role1", "role2"];
-            const result = await handleStep1(formData, roles, onError);
+            const result = await handleStep1(randomId(), formData, roles, onError);
             expect(result).toBe(true);
             expect(onError).not.toHaveBeenCalled();
             expect(createUserMock).toHaveBeenCalledWith(
@@ -55,7 +58,7 @@ describe("Onboarding Handlers", () => {
             createUserMock.mockResolvedValueOnce({ ok: true } as unknown as CreateUserResponse);
 
             const onError = vi.fn();
-            const result = await handleStep1(formData, [], onError);
+            const result = await handleStep1(randomId(), formData, [], onError);
             expect(result).toBe(true);
             expect(onError).not.toHaveBeenCalled();
             expect(createUserMock).toHaveBeenCalled();
@@ -65,7 +68,7 @@ describe("Onboarding Handlers", () => {
             createUserMock.mockResolvedValueOnce({ ok: false, errors: ["boom"] } as unknown as CreateUserResponse);
 
             const onError = vi.fn();
-            const result = await handleStep1(formData, [], onError);
+            const result = await handleStep1(randomId(), formData, [], onError);
             expect(result).toBe(false);
             expect(onError).toHaveBeenCalledWith(expect.stringContaining("Failed to save users metadata"));
         });
@@ -74,7 +77,7 @@ describe("Onboarding Handlers", () => {
             createUserMock.mockImplementationOnce(() => { throw new Error("bad"); });
 
             const onError = vi.fn();
-            const result = await handleStep1(formData, [], onError);
+            const result = await handleStep1(randomId(), formData, [], onError);
             expect(result).toBe(false);
             expect(onError).toHaveBeenCalledWith(expect.stringContaining("bad"));
         });
