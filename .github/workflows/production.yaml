@@ -9,6 +9,7 @@ on:
 jobs:
   Deploy-Production:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - uses: actions/checkout@v3
       - name: Install Vercel CLI
@@ -30,3 +31,44 @@ jobs:
           vercel env add NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL production < <(echo "${{ vars.NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL }}") --token $VERCEL_TOKEN
           vercel env add PROJECT_NAME production < <(echo "HOPE_SOBER_LIVING") --token $VERCEL_TOKEN
         continue-on-error: true
+
+      - name: Set Vercel env DB_HOSTNAME
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          echo "Setting DB_HOSTNAME to ${{ secrets.DB_HOSTNAME }}"
+          vercel env rm DB_HOSTNAME production --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_HOSTNAME }}" | vercel env add DB_HOSTNAME production --token $VERCEL_TOKEN
+
+      - name: Set Vercel env DB_PORT
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          vercel env rm DB_PORT production --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_PORT }}" | vercel env add DB_PORT production --token $VERCEL_TOKEN
+
+      - name: Set Vercel env DB_USER
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          vercel env rm DB_USER production --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_USER }}" | vercel env add DB_USER production --token $VERCEL_TOKEN
+
+      - name: Set Vercel env DB_PASSWORD
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          vercel env rm DB_PASSWORD production --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_PASSWORD }}" | vercel env add DB_PASSWORD production --token $VERCEL_TOKEN
+
+      - name: Set Vercel env DB_NAME
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        shell: bash
+        run: |
+          vercel env rm DB_NAME production --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_NAME }}" | vercel env add DB_NAME production --token $VERCEL_TOKEN
