@@ -38,37 +38,37 @@ jobs:
         shell: bash
         run: |
           echo "Setting DB_HOSTNAME to ${{ secrets.DB_HOSTNAME }}"
-          vercel env rm DB_HOSTNAME production --yes --token $VERCEL_TOKEN || true
-          echo "${{ secrets.DB_HOSTNAME }}" | vercel env add DB_HOSTNAME production --token $VERCEL_TOKEN
+          vercel env rm DB_HOSTNAME preview --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_HOSTNAME }}" | vercel env add DB_HOSTNAME preview --token $VERCEL_TOKEN
 
       - name: Set Vercel env DB_PORT
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         shell: bash
         run: |
-          vercel env rm DB_PORT production --yes --token $VERCEL_TOKEN || true
-          echo "${{ secrets.DB_PORT }}" | vercel env add DB_PORT production --token $VERCEL_TOKEN
+          vercel env rm DB_PORT preview --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_PORT }}" | vercel env add DB_PORT preview --token $VERCEL_TOKEN
 
       - name: Set Vercel env DB_USER
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         shell: bash
         run: |
-          vercel env rm DB_USER production --yes --token $VERCEL_TOKEN || true
-          echo "${{ secrets.DB_USER }}" | vercel env add DB_USER production --token $VERCEL_TOKEN
+          vercel env rm DB_USER preview --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_USER }}" | vercel env add DB_USER preview --token $VERCEL_TOKEN
 
       - name: Set Vercel env DB_PASSWORD
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         shell: bash
         run: |
-          vercel env rm DB_PASSWORD production --yes --token $VERCEL_TOKEN || true
-          echo "${{ secrets.DB_PASSWORD }}" | vercel env add DB_PASSWORD production --token $VERCEL_TOKEN
+          vercel env rm DB_PASSWORD preview --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_PASSWORD }}" | vercel env add DB_PASSWORD preview --token $VERCEL_TOKEN
 
       - name: Set Vercel env DB_NAME
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         shell: bash
         run: |
-          vercel env rm DB_NAME production --yes --token $VERCEL_TOKEN || true
-          echo "${{ secrets.DB_NAME }}" | vercel env add DB_NAME production --token $VERCEL_TOKEN
+          vercel env rm DB_NAME preview --yes --token $VERCEL_TOKEN || true
+          echo "${{ secrets.DB_NAME }}" | vercel env add DB_NAME preview --token $VERCEL_TOKEN
