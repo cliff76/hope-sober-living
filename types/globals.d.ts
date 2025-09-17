@@ -6,4 +6,8 @@ declare global {
             onboardingComplete?: boolean
         }
     }
+
+    interface UserPublicMetadata {
+        roles?: string[]
+    }
 }

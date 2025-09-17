@@ -30,8 +30,14 @@ export default function OnboardingPage() {
         try {
             setError("");
             setIsLoading(true);
+            if(!user) {
+                setError("User is not logged in!");
+                setIsLoading(false);
+                return;
+            }
             if (step === 1) {
-                const result = await handleStep1(formData, onError);
+                console.log('onboarding/page.tsx: handleStep1');
+                const result = await handleStep1(user.id ?? '', formData, user?.publicMetadata?.roles ?? [], onError);
                 setHasHope(formData.get('resident') === 'existing');
                 if(result) {
                     setStep(2);
@@ -47,6 +53,7 @@ export default function OnboardingPage() {
             setIsLoading(false);
         }
     };
+    console.log('onboarding/page.tsx: rendering onboarding page...');
 
     if(step === 1)  return (
         <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleSubmit}/>

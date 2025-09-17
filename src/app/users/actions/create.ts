@@ -1,23 +1,26 @@
 'use server'
 
-import {RegisteredUser, registerUser, RegisterUserResponse} from "@/app/users/utils";
+import {
+    RegisteredUser,
+    createNewResident,
+    RegisterUserResponse,
+    updateUserRoles,
+    ROLES_RESIDENT
+} from "@/features/users/db/users";
 import {auth, clerkClient} from "@clerk/nextjs/server";
 
 export type CreateUserResponse = RegisterUserResponse
 
-export async function createUser(user: RegisteredUser): Promise<CreateUserResponse> {
-    let authResponse;
-    try {
-        authResponse = await auth();
-    } catch (e: unknown) {
-        return { ok: false, errors: ['Error fetching Clerk auth response' + (e as Error).message] }
+export async function createUser(user: RegisteredUser, roles: string []): Promise<CreateUserResponse> {
+    console.log('createUser: Creating user with roles ', roles);
+    if(!roles || roles.length === 0) {
+        updateUserRoles(user.externalId)
+        return await createNewResident(user);
     }
-    const { userId } = authResponse;
-    if (!userId) {
-        return { ok: false, errors: ['No Logged In User'] }
-    }
+    if(roles.includes(ROLES_RESIDENT))
+        return await createNewResident(user);
 
-    return await registerUser(user);
+    throw new Error('Unsupported roles [' + roles.join(', ' + ']'));
 }
 
 export async function updateUser(clientUserId: string, info: FormData): Promise<CreateUserResponse> {

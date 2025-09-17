@@ -1,5 +1,5 @@
 import React from "react";
-import {render, waitFor} from "@testing-library/react";
+import {act, render, waitFor} from "@testing-library/react";
 import {beforeEach, describe, expect, it, vi} from "vitest";
 
 import OnboardingPage from "./page";
@@ -86,6 +86,31 @@ describe("OnboardingPage", () => {
         // Expect router.push to have been called to go to '/'
         await waitFor(() => {
             expect(pushMock).toHaveBeenCalledWith('/');
+        });
+    });
+
+    it("calls handleStep1 with roles from user metadata", async () => {
+        const roles = ["test-role"];
+        const testUser = {
+            id: "u1",
+            primaryEmailAddress: "test@example.com",
+            reload: vi.fn(),
+            publicMetadata: { roles }
+        };
+        vi.spyOn(Clerk, "useUser").mockReturnValue({
+            user: testUser
+        } as unknown as UseUserReturn);
+        mockedHandleStep1.mockResolvedValue(true);
+        const formData = new FormData();
+        render(<OnboardingPage />);
+
+        await act(async () => {
+            const onNext = mockedInitialForm.mock.calls[0][0].onNext;
+            await onNext(formData);
+        })
+
+        await waitFor(() => {
+            expect(mockedHandleStep1).toHaveBeenCalledWith(testUser.id, formData, roles, expect.any(Function));
         });
     });
 });
