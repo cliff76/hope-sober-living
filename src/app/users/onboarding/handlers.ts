@@ -3,6 +3,7 @@ import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 
 export async function handleStep1(userId: string, formData: FormData, roles:string[], onError: (error: string) => void) {
+    console.log('handleStep1');
     const initialFormRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
     try {
         //check required fields
