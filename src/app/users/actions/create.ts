@@ -12,7 +12,6 @@ import {auth, clerkClient} from "@clerk/nextjs/server";
 export type CreateUserResponse = RegisterUserResponse
 
 export async function createUser(user: RegisteredUser, roles: string []): Promise<CreateUserResponse> {
-    console.log('createUser: Creating user with roles ', roles);
     if(!roles || roles.length === 0) {
         updateUserRoles(user.externalId)
         return await createNewResident(user);
