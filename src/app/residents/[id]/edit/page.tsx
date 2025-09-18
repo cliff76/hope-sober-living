@@ -74,7 +74,7 @@ export default async function EditResidentPage({
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">
       <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
-        <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 px-6 py-8 text-white">
+        <div className="bg-gradient-to-r from-blue-900 via-primary to-gray-800 px-6 py-8 text-white">
           <h1 className="text-2xl font-semibold tracking-tight">
             Edit Resident
           </h1>

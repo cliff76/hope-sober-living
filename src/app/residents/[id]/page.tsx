@@ -88,7 +88,7 @@ export default async function ResidentDetailPage({
   return (
     <main className="mx-auto max-w-5xl px-4 py-10">
       <div className="relative overflow-hidden rounded-xl border bg-white shadow-sm">
-        <div className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-500 px-6 py-10 text-white">
+        <div className="bg-gradient-to-r from-blue-900 via-primary to-gray-800 px-6 py-10 text-white">
           <div className="flex items-start justify-between gap-4">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight">

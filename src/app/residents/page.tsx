@@ -57,12 +57,14 @@ export default async function ResidentsPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-10">
-      <header className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight">Residents</h1>
-        <p className="text-muted-foreground mt-1">
-          All registered residents in the system.
-        </p>
-      </header>
+      <section className="mb-8 overflow-hidden rounded-xl border shadow-sm">
+        <div className="bg-gradient-to-r from-blue-900 via-primary to-gray-800 px-6 py-8 text-white">
+          <h1 className="text-3xl font-semibold tracking-tight">Residents</h1>
+          <p className="mt-1 text-white/90">
+            All registered residents in the system.
+          </p>
+        </div>
+      </section>
 
       {residents.length === 0 ? (
         <div className="rounded-md border p-6 text-center">
@@ -71,10 +73,10 @@ export default async function ResidentsPage() {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border shadow-sm">
+        <div className="overflow-x-auto rounded-xl border shadow-sm">
           <table className="min-w-full divide-y">
             <thead className="bg-gray-50/70">
-              <tr className="text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <tr className="text-left text-xs font-medium uppercase tracking-wider text-gray-600">
                 <th className="px-3 py-3 w-10">
                   <span className="sr-only">Edit</span>
                 </th>
@@ -88,11 +90,11 @@ export default async function ResidentsPage() {
             </thead>
             <tbody className="divide-y">
               {residents.map((r) => (
-                <tr key={r.id} className="text-sm hover:bg-gray-50 transition-colors">
+                <tr key={r.id} className="text-sm hover:bg-primary/5 transition-colors">
                   <td className="px-3 py-3 w-10">
                     <Link
                       href={`/residents/${r.id}/edit`}
-                      className="inline-flex items-center justify-center rounded-full border border-indigo-200 bg-indigo-50 p-1.5 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-700 transition"
+                      className="inline-flex items-center justify-center rounded-full border border-primary/20 bg-primary/10 p-1.5 text-primary hover:bg-primary/15 transition"
                       aria-label={`Edit ${r.name}`}
                     >
                       <Pencil className="h-4 w-4" aria-hidden="true" />
@@ -101,14 +103,14 @@ export default async function ResidentsPage() {
                   <td className="px-4 py-3 font-medium">
                     <Link
                       href={`/residents/${r.id}`}
-                      className="text-indigo-700 hover:underline"
+                      className="text-primary hover:underline"
                     >
                       {r.name}
                     </Link>
                   </td>
                   <td className="px-4 py-3">
                     <a
-                      className="text-blue-600 hover:underline"
+                      className="text-primary hover:underline"
                       href={`mailto:${r.email}`}
                     >
                       {r.email}
@@ -116,7 +118,7 @@ export default async function ResidentsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <a
-                      className="text-blue-600 hover:underline"
+                      className="text-primary hover:underline"
                       href={`tel:${r.phoneNumber}`}
                     >
                       {r.phoneNumber}
