@@ -3,6 +3,8 @@ import {db} from "@/drizzle/client";
 import {ResidentsTable, UsersTable} from "@/drizzle/schema/users";
 import {eq} from "drizzle-orm";
 import React from "react";
+import Link from "next/link";
+import { Pencil } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Residents",
@@ -69,10 +71,13 @@ export default async function ResidentsPage() {
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-md border">
+        <div className="overflow-x-auto rounded-md border shadow-sm">
           <table className="min-w-full divide-y">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50/70">
               <tr className="text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                <th className="px-3 py-3 w-10">
+                  <span className="sr-only">Edit</span>
+                </th>
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Email</th>
                 <th className="px-4 py-3">Phone</th>
@@ -83,8 +88,24 @@ export default async function ResidentsPage() {
             </thead>
             <tbody className="divide-y">
               {residents.map((r) => (
-                <tr key={r.id} className="text-sm">
-                  <td className="px-4 py-3 font-medium">{r.name}</td>
+                <tr key={r.id} className="text-sm hover:bg-gray-50 transition-colors">
+                  <td className="px-3 py-3 w-10">
+                    <Link
+                      href={`/residents/${r.id}/edit`}
+                      className="inline-flex items-center justify-center rounded-full border border-indigo-200 bg-indigo-50 p-1.5 text-indigo-600 hover:bg-indigo-100 hover:text-indigo-700 transition"
+                      aria-label={`Edit ${r.name}`}
+                    >
+                      <Pencil className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3 font-medium">
+                    <Link
+                      href={`/residents/${r.id}`}
+                      className="text-indigo-700 hover:underline"
+                    >
+                      {r.name}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3">
                     <a
                       className="text-blue-600 hover:underline"
