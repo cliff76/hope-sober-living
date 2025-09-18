@@ -4,6 +4,8 @@ import Image from "next/image";
 import {Slideshow} from "@/components/slideshow";
 import {Button} from "@/components/ui/button";
 import {usePathname, useRouter} from "next/navigation";
+import {SignedIn, SignedOut} from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Home() {
     const router = useRouter(); // Initialize the router
@@ -41,7 +43,10 @@ export default function Home() {
           <p className="text-md sm:text-lg text-slate-700 dark:text-stone-300 max-w-2xl">
             Discover a place where hope is restored and futures are rebuilt.
           </p>
-            <Button variant="default" className="m-2" onClick={doSignin}>Get Hope!</Button>
+            <SignedIn><Button variant="default" className="m-2"><Link href="/residents">Residents</Link></Button></SignedIn>
+            <SignedOut>
+                <Button variant="default" className="m-2" onClick={doSignin}>Get Hope!</Button>
+            </SignedOut>
         </div>
       </div>
     </>

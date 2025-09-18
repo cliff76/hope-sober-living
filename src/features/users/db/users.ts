@@ -2,6 +2,8 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { db } from "@/drizzle/client";
 import { UsersTable, ResidentsTable } from "@/drizzle/schema/users";
 
+export const ROLES_ADMIN = 'admin';
+export const ROLES_EMPLOYEE = 'employee';
 export const ROLES_RESIDENT = 'resident';
 
 const DEFAULT_ROLES = [ROLES_RESIDENT];
