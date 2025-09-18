@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Pencil } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { db } from "@/drizzle/client";
 import { ResidentsTable, UsersTable } from "@/drizzle/schema/users";
 import { eq } from "drizzle-orm";
@@ -90,6 +90,14 @@ export default async function ResidentDetailPage({
       <div className="relative overflow-hidden rounded-xl border bg-white shadow-sm">
         <div className="bg-gradient-to-r from-blue-900 via-primary to-gray-800 px-6 py-10 text-white">
           <div className="flex items-start justify-between gap-4">
+              <div>
+                  <Link
+                      href="/residents"
+                      className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-2 text-white ring-1 ring-white/30 backdrop-blur hover:bg-white/20 transition"
+                  >
+                      <ArrowLeft className="h-4 w-4" aria-hidden="true"/>
+                  </Link>
+              </div>
             <div>
               <h1 className="text-3xl font-semibold tracking-tight">
                 {resident.name}
@@ -98,13 +106,15 @@ export default async function ResidentDetailPage({
                 Resident ID: <span className="font-mono">{resident.id}</span>
               </p>
             </div>
-            <Link
-              href={`/residents/${resident.id}/edit`}
-              className="inline-flex items-center gap-2 rounded-md bg-white/20 px-3 py-2 text-white ring-1 ring-white/40 backdrop-blur hover:bg-white/30 transition"
-            >
-              <Pencil className="h-4 w-4" aria-hidden="true" />
-              <span>Edit</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href={`/residents/${resident.id}/edit`}
+                className="inline-flex items-center gap-2 rounded-md bg-white/20 px-3 py-2 text-white ring-1 ring-white/40 backdrop-blur hover:bg-white/30 transition"
+              >
+                <Pencil className="h-4 w-4" aria-hidden="true" />
+                <span>Edit</span>
+              </Link>
+            </div>
           </div>
         </div>
 

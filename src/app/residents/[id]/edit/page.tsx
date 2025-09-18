@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import { db } from "@/drizzle/client";
 import { ResidentsTable, UsersTable } from "@/drizzle/schema/users";
 import { eq } from "drizzle-orm";
@@ -75,10 +76,20 @@ export default async function EditResidentPage({
     <main className="mx-auto max-w-3xl px-4 py-10">
       <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
         <div className="bg-gradient-to-r from-blue-900 via-primary to-gray-800 px-6 py-8 text-white">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Edit Resident
-          </h1>
-          <p className="text-indigo-100 mt-1">{resident.name}</p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Edit Resident
+              </h1>
+              <p className="text-indigo-100 mt-1">{resident.name}</p>
+            </div>
+            <Link
+              href="/residents"
+              className="inline-flex items-center gap-2 rounded-md bg-white/10 px-3 py-2 text-white ring-1 ring-white/30 backdrop-blur hover:bg-white/20 transition"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          </div>
         </div>
 
         <form action={action} className="space-y-6 px-6 py-8">
