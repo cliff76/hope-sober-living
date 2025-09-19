@@ -4,10 +4,10 @@ import {
     RegisteredUser,
     createNewResident,
     RegisterUserResponse,
-    updateUserRoles,
-    ROLES_RESIDENT
+    updateUserRoles
 } from "@/features/users/db/users";
 import {auth, clerkClient} from "@clerk/nextjs/server";
+import {ROLES_RESIDENT} from "@/utis/constants";
 
 export type CreateUserResponse = RegisterUserResponse
 
