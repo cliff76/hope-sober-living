@@ -1,4 +1,5 @@
-import {Book, House, MessageCircleHeart} from "lucide-react";
+import {Book, House, MessageCircleHeart, UserCog, UsersIcon} from "lucide-react";
+import {ROLES_ADMIN, ROLES_EMPLOYEE} from "@/utis/constants";
 
 export const menuConfig = {
     main: [
@@ -10,12 +11,26 @@ export const menuConfig = {
         },
         {
             key: 2,
+            roles: [ROLES_ADMIN],
+            title: "Admin",
+            icon: (<UserCog/>),
+            href: "/admin",
+        },
+        {
+            key: 3,
+            roles: [ROLES_ADMIN, ROLES_EMPLOYEE],
+            title: "Residents",
+            icon: (<UsersIcon/>),
+            href: "/residents",
+        },
+        {
+            key: 4,
             title: "Testimonials",
             icon: (<MessageCircleHeart/>),
             href: "/testimonials",
         },
         {
-            key: 3,
+            key: 5,
             title: "About",
             icon: (<Book/>),
             href: "/about",

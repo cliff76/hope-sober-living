@@ -1,10 +1,7 @@
-import { clerkClient } from "@clerk/nextjs/server";
-import { db } from "@/drizzle/client";
-import { UsersTable, ResidentsTable } from "@/drizzle/schema/users";
-
-export const ROLES_RESIDENT = 'resident';
-
-const DEFAULT_ROLES = [ROLES_RESIDENT];
+import {clerkClient} from "@clerk/nextjs/server";
+import {db} from "@/drizzle/client";
+import {ResidentsTable, UsersTable} from "@/drizzle/schema/users";
+import {DEFAULT_ROLES} from "@/utis/constants";
 
 export type RegisteredUser = {
     id?: string;
