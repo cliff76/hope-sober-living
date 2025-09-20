@@ -45,9 +45,10 @@ async function getResident(id: string): Promise<ResidentEdit | null> {
 export default async function EditResidentPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const resident = await getResident(params.id);
+  const { id } = await params;
+  const resident = await getResident(id);
 
   if (!resident) {
     return (
