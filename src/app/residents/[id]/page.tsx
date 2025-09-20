@@ -60,9 +60,10 @@ async function getResident(id: string): Promise<ResidentDetail | null> {
 export default async function ResidentDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const resident = await getResident(params.id);
+  const { id } = await params;
+  const resident = await getResident(id);
 
   if (!resident) {
     return (
