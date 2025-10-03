@@ -1,7 +1,9 @@
 import {clerkClient} from "@clerk/nextjs/server";
 import {db} from "@/drizzle/client";
 import {ResidentsTable, UsersTable} from "@/drizzle/schema/users";
-import {DEFAULT_ROLES} from "@/utils/constants";
+import {DEFAULT_ROLES, SaveError} from "@/utils/constants";
+
+type DBError = Error & { code: string, constraint: string, detail: string };
 
 export type RegisteredUser = {
     id?: string;
@@ -24,7 +26,7 @@ export type RegisteredUser = {
 
 export type RegisterUserResponse = {
     ok: boolean;
-    errors?: string[];
+    errors?: Array<string | SaveError>;
 }
 
 export async function updateUserRoles(userId: string, roles: string[] = DEFAULT_ROLES) {
@@ -34,6 +36,31 @@ export async function updateUserRoles(userId: string, roles: string[] = DEFAULT_
             roles: roles,
         },
     })
+}
+
+const fieldMap = new Map(Object.entries({
+    name: 'fullName',
+    email: 'primaryEmailAddress',
+    phone_number: 'phone',
+    sobriety_date: 'sobriety_date',
+    sponsor: 'sponsor',
+    step: 'currentStep'
+}));
+
+function asDuplicateError(error: DBError) : SaveError {
+    const match = error.constraint.match(/[a-zA-Z0-9]+_([\w|_]+)_unique$/);
+    if (match) {
+        const field = match[1];
+        return {
+            code: 'duplicate',
+            message: `A user with this ${field} already exists.`,
+            field: fieldMap.get(field),
+        };
+    }
+    return {
+        code: 'duplicate',
+        message: error.detail
+    }
 }
 
 /**
@@ -85,7 +112,15 @@ export async function createNewResident(user: RegisteredUser): Promise<RegisterU
 
         return { ok: true };
     } catch (err: unknown) {
-        console.error('Error creating new resident:', (err as Error).stack ?? err);
-        return { ok: false, errors: [(err as Error).message] };
+        const error = ((err as Error).cause as DBError) ?? err;
+        if(error.cause) console.error(
+            'Error creating new resident:',
+            error.message,
+            (error.cause as Error).message,
+            (error.cause as Error).stack,
+        )
+        console.error('Error creating new resident:', error.stack ?? err);
+        const message = error?.code === '23505' ? asDuplicateError(error) : error.message;
+        return { ok: false, errors: [message] };
     }
 }

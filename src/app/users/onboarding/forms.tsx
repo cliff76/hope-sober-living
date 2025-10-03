@@ -36,7 +36,7 @@ export function InitialForm({isLoading, user, error, onNext} : InitialFormProps)
 
         {error && (
             <div className="rounded-md bg-red-50 p-4">
-                <div className="text-sm text-red-700">{error}</div>
+                <div className="text-sm text-red-700 max-w-xs max-h-40 overflow-auto break-words">{error}</div>
             </div>
         )}
 

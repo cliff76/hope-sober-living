@@ -1,6 +1,7 @@
 import {RegisteredUser} from "@/features/users/db/users";
 import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
+import {SaveError} from "@/utils/constants";
 
 export async function handleStep1(userId: string, formData: FormData, roles:string[], onError: (error: string) => void) {
     const initialFormRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
@@ -29,7 +30,7 @@ export async function handleStep1(userId: string, formData: FormData, roles:stri
         if (response.ok) {
             return true;
         } else {
-            onError("Failed to save users metadata: " + response.errors?.join(',\n'));
+            onError("Failed to save users metadata: " + response.errors?.map(error => (error as SaveError)?.message ?? error).join(',\n'));
             return false;
         }
 
