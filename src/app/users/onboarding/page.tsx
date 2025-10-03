@@ -5,20 +5,29 @@ import {useSignUp, useUser} from "@clerk/nextjs";
 import {useRouter} from "next/navigation";
 import {InitialForm, SequentialForm} from "./forms";
 import {handleStep1, handleStep2} from "./handlers";
-
+import { SaveError } from "@/utils/constants";
 
 export default function OnboardingPage() {
     const { isLoaded } = useSignUp();
     const router = useRouter();
 
     const [error, setError] = useState("");
+    const [errors, setErrors] = useState<SaveError[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const { user } = useUser();
     const [step, setStep] = useState<number>(1);
 
-    function onError(error: string) {
-        console.error(error);
-        setError(error);
+    function onError(err: string | SaveError[]) {
+        if (typeof err === "string") {
+            console.error(err);
+            setError(err);
+            setErrors([]);
+        } else {
+            console.error("Validation errors:", err);
+            setErrors(err);
+            // Optional: also set a general error message
+            setError(err.map(e => e.message).join(", "));
+        }
     }
 
     const [hasHope, setHasHope] = useState<boolean>(false);
@@ -29,6 +38,7 @@ export default function OnboardingPage() {
 
         try {
             setError("");
+            setErrors([]);
             setIsLoading(true);
             if(!user) {
                 setError("User is not logged in!");
@@ -43,7 +53,7 @@ export default function OnboardingPage() {
                 }
             }
             if (step === 2) {
-                const result = await handleStep2(formData, onError, user);
+                const result = await handleStep2(formData, (e: string) => onError(e), user);
                 if(result) {
                     router.push('/');
                 }
@@ -54,7 +64,7 @@ export default function OnboardingPage() {
     };
 
     if(step === 1)  return (
-        <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} onNext={handleSubmit}/>
+        <InitialForm user={user} isLoading={isLoading || !isLoaded} error={error} errors={errors} onNext={handleSubmit}/>
     );
     if(step === 2) return (
         <SequentialForm user={user} isLoading={isLoading || !isLoaded} error={error} hasHope={hasHope} onPrevious={() => setStep(1)} onNext={handleSubmit}/>

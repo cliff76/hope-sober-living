@@ -1,5 +1,5 @@
 import {Book, House, MessageCircleHeart, UserCog, UsersIcon} from "lucide-react";
-import {ROLES_ADMIN, ROLES_EMPLOYEE} from "@/utis/constants";
+import {ROLES_ADMIN, ROLES_EMPLOYEE} from "@/utils/constants";
 
 export const menuConfig = {
     main: [
