@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Pencil } from "lucide-react";
-import { db } from "@/drizzle/client";
-import { ResidentsTable, UsersTable } from "@/drizzle/schema/users";
-import { eq } from "drizzle-orm";
+import {ArrowLeft, Pencil} from "lucide-react";
+import {db} from "@/drizzle/client";
+import {ResidentsTable, UsersTable} from "@/drizzle/schema/users";
+import {eq} from "drizzle-orm";
+import {formatDate} from "@/utils/utils";
 
 type ResidentDetail = {
   id: string;
@@ -21,16 +22,6 @@ type ResidentDetail = {
   residentCreatedAt: string | Date;
   residentUpdatedAt: string | Date;
 };
-
-function formatDate(value: string | Date) {
-  const d = typeof value === "string" ? new Date(value) : value;
-  if (isNaN(d.getTime())) return String(value);
-  return d.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
 
 async function getResident(id: string): Promise<ResidentDetail | null> {
   const rows = await db

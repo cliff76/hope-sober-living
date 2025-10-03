@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {usePathname, useRouter} from "next/navigation";
 import {SignedIn, SignedOut, useUser} from "@clerk/nextjs";
 import Link from "next/link";
-import {ROLES_ADMIN, ROLES_EMPLOYEE} from "@/utis/constants";
+import {ROLES_ADMIN, ROLES_EMPLOYEE} from "@/utils/constants";
 
 export default function Home() {
     const router = useRouter(); // Initialize the router

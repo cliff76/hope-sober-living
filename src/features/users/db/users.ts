@@ -1,7 +1,7 @@
 import {clerkClient} from "@clerk/nextjs/server";
 import {db} from "@/drizzle/client";
 import {ResidentsTable, UsersTable} from "@/drizzle/schema/users";
-import {DEFAULT_ROLES} from "@/utis/constants";
+import {DEFAULT_ROLES} from "@/utils/constants";
 
 export type RegisteredUser = {
     id?: string;

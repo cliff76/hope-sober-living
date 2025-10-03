@@ -5,7 +5,7 @@ import {handleStep1, handleStep2} from "./handlers";
 import * as CreateModule from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 import {CreateUserResponse} from "@/app/users/actions/create";
-import {getRandomInteger} from "@/utis/utils";
+import {getRandomInteger} from "@/utils/utils";
 
 vi.mock("@/app/users/actions/create");
 
