@@ -5,11 +5,13 @@ import {UserResource} from "@clerk/types";
 import {Button} from "@/components/ui/button";
 import {ChevronLeft} from "lucide-react";
 import {RequiredCheckbox} from "@/components/requiredCheckbox";
+import {SaveError} from "@/utils/constants";
 
 type InitialFormProps = {
     isLoading?: boolean,
     user?: UserResource | null | undefined,
     error?: string,
+    errors?: Array<SaveError>,
     onNext: (formData: FormData) => Promise<void>,
 };
 
@@ -17,7 +19,11 @@ type SequentialFormProps = InitialFormProps & {hasHope: boolean, onPrevious: () 
 
 const formFieldHeaderStyle = "block text-sm font-medium text-gray-700";
 
-export function InitialForm({isLoading, user, error, onNext} : InitialFormProps) {
+function decorateError(errors: Array<SaveError> | undefined, field: string) {
+    return (errors?.some((e: SaveError) => e.field === field) ? 'error' : '')
+}
+
+export function InitialForm({isLoading, user, error, errors, onNext} : InitialFormProps) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
@@ -78,7 +84,7 @@ export function InitialForm({isLoading, user, error, onNext} : InitialFormProps)
                 </div>
 
                 {/* phone field */}
-                <div>
+                <div className={decorateError(errors, "phone")}>
                     <label htmlFor="phone" className={formFieldHeaderStyle}>
                         Phone
                     </label>
@@ -96,7 +102,7 @@ export function InitialForm({isLoading, user, error, onNext} : InitialFormProps)
                 </div>
 
                 {/* email field */}
-                <div>
+                <div className={decorateError(errors, "email")}>
                     <label htmlFor="email" className={formFieldHeaderStyle}>
                         Email
                     </label>
@@ -118,7 +124,7 @@ export function InitialForm({isLoading, user, error, onNext} : InitialFormProps)
                 <h3 className="text-lg font-medium text-gray-900">Your recovery information</h3>
 
                 {/* Sobriety date field */}
-                <div>
+                <div className={decorateError(errors, "sobrietyDate")}>
                     <label htmlFor="sobrietyDate" className={formFieldHeaderStyle}>
                         Sobriety Date
                     </label>
@@ -134,7 +140,7 @@ export function InitialForm({isLoading, user, error, onNext} : InitialFormProps)
                 </div>
 
                 {/* Sponsor field */}
-                <div>
+                <div className={decorateError(errors, "sponsor")}>
                     <label htmlFor="sponsor" className={formFieldHeaderStyle}>
                         Sponsor
                     </label>
@@ -150,7 +156,7 @@ export function InitialForm({isLoading, user, error, onNext} : InitialFormProps)
                 </div>
 
                 {/* Step field */}
-                <div>
+                <div className={decorateError(errors, "step")}>
                     <label htmlFor="step" className={formFieldHeaderStyle}>
                         Current Step (1-12)
                     </label>

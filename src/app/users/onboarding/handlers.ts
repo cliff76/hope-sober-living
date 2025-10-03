@@ -3,7 +3,7 @@ import {createUser, updateUser} from "@/app/users/actions/create";
 import {UserResource} from "@clerk/types";
 import {SaveError} from "@/utils/constants";
 
-export async function handleStep1(userId: string, formData: FormData, roles:string[], onError: (error: string) => void) {
+export async function handleStep1(userId: string, formData: FormData, roles:string[], onError: (error: string | SaveError[]) => void) {
     const initialFormRequiredFields = ['firstName', 'lastName', 'phone', 'sobrietyDate', 'sponsor'];
     try {
         //check required fields
@@ -30,7 +30,15 @@ export async function handleStep1(userId: string, formData: FormData, roles:stri
         if (response.ok) {
             return true;
         } else {
-            onError("Failed to save users metadata: " + response.errors?.map(error => (error as SaveError)?.message ?? error).join(',\n'));
+            const errors = response.errors ?? [];
+            const saveErrors: SaveError[] = errors.filter(
+                (e): e is SaveError => typeof e === 'object' && e !== null && 'message' in e
+            );
+            if (saveErrors.length > 0) {
+                onError(saveErrors);
+            } else {
+                onError("Failed to save users metadata: " + errors.join(',\n'));
+            }
             return false;
         }
 
