@@ -1,8 +1,8 @@
-1. [ ] Establish environment configuration with @t3-oss/env-nextjs
-   - [ ] Create src/data/env/server.ts with zod-validated server env schema (DATABASE_URL, CLERK keys, etc.)
-   - [ ] Create src/data/env/client.ts for any public runtime variables
-   - [ ] Document required .env variables in README and add .env.example
-   - [ ] Fail fast on invalid/missing env at boot
+1. [x] Establish environment configuration with @t3-oss/env-nextjs
+   - [x] Create src/data/env/server.ts with zod-validated server env schema (DATABASE_URL, CLERK keys, etc.)
+   - [x] Create src/data/env/client.ts for any public runtime variables
+   - [x] Document required .env variables in README and add .env.example
+   - [x] Fail fast on invalid/missing env at boot
 2. [ ] Harden database layer (Drizzle + Postgres)
    - [ ] Add connection pool config (timeouts, max clients) and health check
    - [ ] Ensure graceful shutdown of Pool on process exit
